@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+enum CloseCode {
+  CLOSE_CODE_UNSPECIFIED = 0;
+  CLOSE_CODE_NORMAL = 1006;
+  CLOSE_CODE_UNAUTHORIZED = 4401;
+  CLOSE_CODE_NOTFOUND = 4404;
+}
+
+enum MessageType {
+  MESSAGE_UNSPECIFIED = 0;
+  MESSAGE_NICKNAME = 1;
+  MESSAGE_MOUSEPOS = 2;
+}
+
+message ClientNickname {
+  string nickname = 1;
+}
+
+message ClientMousePos {
+  double x = 1;
+  double y = 2;
+}
+
+message ClientMessage {
+  MessageType type = 1;
+  oneof message {
+    ClientNickname nickname = 2;
+    ClientMousePos mousepos = 3;
+  };
+}
