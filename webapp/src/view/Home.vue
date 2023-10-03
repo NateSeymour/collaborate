@@ -6,7 +6,7 @@
 
 <script lang="ts" setup>
 import { useMutation } from '@tanstack/vue-query';
-import { config } from '@/config';
+import { config } from '../config';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();

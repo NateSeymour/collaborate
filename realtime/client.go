@@ -1,6 +1,8 @@
 package main
 
 import (
+	"github.com/NateSeymour/collaborate/typings/pb"
+	"github.com/golang/protobuf/proto"
 	"github.com/gorilla/websocket"
 )
 
@@ -21,9 +23,12 @@ func (c *Client) ClientHandler() {
 			return
 		}
 
-		c.room.message <- ClientMessage{
+		clientMessage := &pb.ClientMessage{}
+		_ = proto.Unmarshal(m, clientMessage)
+
+		c.room.message <- SocketMessage{
 			client: c,
-			data:   m,
+			data:   clientMessage,
 		}
 	}
 }

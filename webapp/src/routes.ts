@@ -11,7 +11,10 @@ export const routes = [
     { path: '/', component: Home },
     { 
         path: '/room/:roomId', 
-        component: CollaborationRoom, 
+        component: CollaborationRoom,
+        meta: {
+            requiresRoomConnection: true,
+        },
         children: [
             {
                 path: 'paint',
