@@ -7,5 +7,5 @@ make all
 gcloud storage cp --recursive bin/frontend/* gs://collaborate-webapp
 
 # Deploy backend
-gcloud app deploy broker/app.broker.yaml realtime/app.realtime.yaml
-gcloud app deploy backend/dispatch.yaml
+gcloud app deploy --quiet backend/app.broker.yaml backend/app.realtime.yaml
+gcloud app deploy --quiet backend/dispatch.yaml

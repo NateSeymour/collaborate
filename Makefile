@@ -16,7 +16,7 @@ pb-ts: frontend-workspace $(PB_SOURCES)
 webapp: pb-ts output-dir
 	npm --prefix ./frontend/webapp run lint:fix
 	npm --prefix ./frontend/webapp run build
-	cp -r ./frontend/webapp/dist ./bin/frontend
+	cp -r ./frontend/webapp/dist/ ./bin/frontend
 
 backend: pb-go output-dir
 	go build -C ./backend -o ../$(OUT_DIR)
