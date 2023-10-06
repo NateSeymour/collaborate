@@ -1,7 +1,0 @@
-{
-  "name": "collaborate",
-  "workspaces": [
-    "webapp",
-    "proto/typescript"
-  ]
-}

@@ -1,0 +1,10 @@
+{
+  "name": "collab-proto",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "private": true,
+  "license": "ISC",
+  "dependencies": {
+    "ts-proto": "^1.160.0"
+  }
+}
