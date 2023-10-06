@@ -2,9 +2,10 @@ package realtime
 
 import (
 	"fmt"
-	"github.com/NateSeymour/collaborate/realtime/room"
-	"github.com/NateSeymour/collaborate/util"
+	"github.com/NateSeymour/collaborate/backend/realtime/room"
+	"github.com/NateSeymour/collaborate/backend/util"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/gorilla/websocket"
 	"net/http"
 	"time"
