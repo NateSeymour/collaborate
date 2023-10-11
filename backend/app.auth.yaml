@@ -1,8 +1,8 @@
 runtime: go121
-service: broker
+service: auth
 instance_class: F1
 env_variables:
   COLLABORATE_MODE: "production"
   COLLABORATE_PORT: ":8080"
   COLLABORATE_HOST: "collaborate.notyoursoftware.com"
-  COLLABORATE_ENABLED_SERVICES: "broker"
+  COLLABORATE_ENABLED_SERVICES: "auth"

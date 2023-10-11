@@ -1,24 +1,24 @@
 import CollaborationRoom from '@/view/CollaborationRoom.vue';
 import Home from '@/view/Home.vue';
 
-import PaintTogether from '@/components/PaintTogether.vue';
 import TalkTogether from '@/components/TalkTogether.vue';
 import DesignTogether from '@/components/DesignTogether.vue';
 import ChatTogether from '@/components/ChatTogether.vue';
 import WriteTogether from '@/components/WriteTogether.vue';
+import DrawTogether from "@/components/DrawTogether.vue";
 
 export const routes = [
     { path: '/', component: Home },
     { 
-        path: '/room/:roomId', 
+        path: '/network-room/:roomId',
         component: CollaborationRoom,
         meta: {
             requiresRoomConnection: true,
         },
         children: [
             {
-                path: 'paint',
-                component: PaintTogether,
+                path: 'draw',
+                component: DrawTogether,
             },
             {
                 path: 'talk',

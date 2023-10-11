@@ -8,8 +8,8 @@
                 <RouterLink :to="`/room/${route.params.roomId}/chat`">
                     <img src="../assets/icons/chat-48.png" alt="Chat Together">
                 </RouterLink>
-                <RouterLink :to="`/room/${route.params.roomId}/paint`">
-                    <img src="../assets/icons/paint-48.png" alt="Paint Together">
+                <RouterLink :to="`/room/${route.params.roomId}/draw`">
+                    <img src="../assets/icons/paint-48.png" alt="Draw Together">
                 </RouterLink>
                 <RouterLink :to="`/room/${route.params.roomId}/write`">
                     <img src="../assets/icons/write-48.png" alt="Write Together">
@@ -34,11 +34,11 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
-import { useRoom, useRoomEventCallback } from '../net/realtime';
-import { ClientMessageType, ServerBroadcast } from 'collab-proto';
+import { useRoom, useRoomEventCallback } from '@/net/realtime';
+import { ClientMessageType, ServerBroadcast } from 'pb';
 
-import ConnectionStatusIndicator from '../components/ui/ConnectionStatusIndicator.vue';
-import MouseCursor from '../components/ui/MouseCursor.vue';
+import ConnectionStatusIndicator from '@/components/ui/ConnectionStatusIndicator.vue';
+import MouseCursor from '@/components/ui/MouseCursor.vue';
 
 const route = useRoute();
 const room = useRoom();
@@ -46,7 +46,7 @@ const room = useRoom();
 const x = ref(0);
 const y = ref(0);
 
-useRoomEventCallback('broadcast', (broadcast: ServerBroadcast) => {
+useRoomEventCallback('broadcast:MousePos', (broadcast: ServerBroadcast) => {
     switch(broadcast.message?.type) {
     case ClientMessageType.CLIENT_MESSAGE_MOUSEPOS:
         x.value = broadcast.message.mousepos!.x;

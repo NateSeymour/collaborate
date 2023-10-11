@@ -1,0 +1,17 @@
+syntax = "proto3";
+option go_package = "./pb";
+
+import "Client.proto";
+
+enum ServerMessageType {
+    SERVER_MESSAGE_UNSPECIFIED = 0;
+    RELAY = 1;
+}
+
+message ServerMessage {
+    ServerMessageType type = 1;
+
+    oneof message {
+        ClientMessage relay = 2;
+    }
+}

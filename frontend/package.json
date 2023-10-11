@@ -2,6 +2,6 @@
   "name": "collaborate",
   "workspaces": [
     "webapp",
-    "collab-proto"
+    "pb"
   ]
 }

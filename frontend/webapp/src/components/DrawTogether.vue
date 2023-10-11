@@ -1,5 +1,5 @@
 <template>
-    <div class="paint-together">
+    <div class="draw-together">
         <div class="canvas-composite-layers">
             <canvas ref="paintLayer" id="paint-layer" class="composite-layer"></canvas>
         </div>
@@ -11,7 +11,7 @@
 </script>
 
 <style lang="scss" scoped>
-.paint-together {
+.draw-together {
     position: absolute;
     width: 100%;
     height: 100%;

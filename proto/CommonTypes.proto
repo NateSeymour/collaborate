@@ -1,0 +1,14 @@
+syntax = "proto3";
+option go_package = "./pb";
+
+enum PointerType {
+    POINTER_TYPE_UNSPECIFIED = 0;
+    POINTER_TYPE_POINTER = 1;
+    POINTER_TYPE_CURSOR = 2;
+    POINTER_TYPE_TOUCH = 3;
+}
+
+message Coordinates {
+    double x = 1;
+    double y = 2;
+}

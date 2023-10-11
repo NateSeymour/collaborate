@@ -1,14 +1,21 @@
 import { onBeforeUnmount, onMounted } from 'vue';
 import mitt from 'mitt';
 import { config } from '@/config.ts';
-import { ClientMessage, CloseCode, ServerBroadcast, ServerMessage, ServerMessageType } from 'collab-proto';
+import {
+    ClientMessage,
+    ClientMessageType,
+    CloseCode,
+    ServerBroadcast,
+    ServerMessage,
+    ServerMessageType
+} from 'pb';
 
 export type RoomState = 'connecting' | 'open' | 'closed';
 
 type RoomEvents = {
-    state: RoomState,
-    broadcast: ServerBroadcast,
-    error: string,
+    'state': RoomState,
+    'broadcast:MousePos': ServerBroadcast,
+    'error': string,
 }
 
 type RoomEventCallback = (event: any) => void;
@@ -17,9 +24,22 @@ class Room {
     roomId: string = 'lobby';
     ws: WebSocket | undefined;
     bus = mitt<RoomEvents>();
+    pendingMessages: ClientMessage[] = [];
+
+    sendPendingMessages = () => {
+        this.pendingMessages.reverse();
+
+        while(this.pendingMessages.length > 0) {
+            this.send(this.pendingMessages.pop()!);
+        }
+    };
 
     send = (message: ClientMessage) => {
-        this.ws?.send(ClientMessage.encode(message).finish());
+        if(this.ws?.readyState === WebSocket.OPEN) {
+            this.ws?.send(ClientMessage.encode(message).finish());
+        } else {
+            this.pendingMessages.push(message);
+        }
     };
 
     disconnect = () => {
@@ -56,6 +76,7 @@ class Room {
         console.log(`[Room] Opened connection to ${this.roomId}`);
 
         this.bus.emit('state', 'open');
+        this.sendPendingMessages();
     };
 
     onClose = async (ev: CloseEvent) => {
@@ -89,7 +110,10 @@ class Room {
 
         switch(message.type) {
         case ServerMessageType.SERVER_MESSAGE_BROADCAST:
-            this.bus.emit('broadcast', message.broadcast!);
+            switch(message.broadcast!.message!.type) {
+                case ClientMessageType.CLIENT_MESSAGE_MOUSEPOS:
+                    this.bus.emit('broadcast:MousePos', message.broadcast!);
+            }
             break;
         }
     };
@@ -100,7 +124,7 @@ export const room: Room = new Room();
 export function useRoomEventCallback(type: keyof RoomEvents, callback: RoomEventCallback) {
     onMounted(() => {
         if(!room) {
-            throw 'Invalid room object!';
+            throw 'Invalid network-room object!';
         }
 
         room.bus.on(type, callback);
@@ -108,7 +132,7 @@ export function useRoomEventCallback(type: keyof RoomEvents, callback: RoomEvent
 
     onBeforeUnmount(() => {
         if(!room) {
-            throw 'Invalid room object!';
+            throw 'Invalid network-room object!';
         }
 
         room.bus.off(type, callback);

@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option go_package = "./pb";
+
+enum CloseCode {
+    CLOSE_CODE_UNSPECIFIED = 0;
+    CLOSE_CODE_NORMAL = 1006;
+    CLOSE_CODE_UNAUTHORIZED = 4401;
+    CLOSE_CODE_NOTFOUND = 4404;
+    CLOSE_CODE_CLIENT_USER_REQUESTED = 4100;
+    CLOSE_CODE_ROOM_EXPIRED = 4001;
+}

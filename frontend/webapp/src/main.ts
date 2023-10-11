@@ -15,12 +15,12 @@ const router = createRouter({
     routes,
 });
 
-router.beforeEach((to) => {
+router.beforeEach((to, from) => {
     const room = useRoom();
 
     if(!to.meta.requiresRoomConnection) {
         room.disconnect();
-    } else {
+    } else if(to.params.roomId !== from.params.roomId) {
         room.connect(to.params.roomId as string);
     }
 });

@@ -1,0 +1,34 @@
+syntax = "proto3";
+option go_package = "./pb";
+
+import "Pointer.proto";
+
+enum ClientRole {
+    CLIENT_ROLE_UNSPECIFIED = 0;
+    GUEST = 1;
+    ROOM_OWNER = 2;
+    SERVER_ADMIN = 3;
+}
+
+message Client {
+    string userId = 1;
+    ClientRole role = 4;
+
+    string nickname = 2;
+    PointerCollection pointers = 3;
+}
+
+enum ClientMessageType {
+    CLIENT_MESSAGE_TYPE_UNSPECIFIED = 0;
+    UPDATE_NICKNAME = 1;
+    UPDATE_POINTERS = 2;
+}
+
+message ClientMessage {
+    string userId = 1;
+    ClientMessageType type = 2;
+    oneof update {
+        string nickname = 3;
+        PointerCollection pointers = 4;
+    }
+}

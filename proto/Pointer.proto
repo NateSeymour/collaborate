@@ -1,0 +1,13 @@
+syntax = "proto3";
+option go_package = "./pb";
+
+import "CommonTypes.proto";
+
+message Pointer {
+    PointerType pointerType = 1;
+    Coordinates coordinates = 2;
+}
+
+message PointerCollection {
+    repeated Pointer pointers = 1;
+}

@@ -1,4 +1,4 @@
-package util
+package config
 
 import (
 	"os"
@@ -19,37 +19,36 @@ type RuntimeConfig struct {
 	EnabledServices map[string]bool
 }
 
-func GetConfig() RuntimeConfig {
-	config := RuntimeConfig{}
-	config.EnabledServices = make(map[string]bool)
+var ApplicationRuntimeConfig RuntimeConfig
+
+func ParseApplicationRuntimeConfig() {
+	ApplicationRuntimeConfig.EnabledServices = make(map[string]bool)
 
 	hostname, hasHostname := os.LookupEnv("COLLABORATE_HOST")
 	if !hasHostname {
-		config.Hostname = "localhost:8080"
+		ApplicationRuntimeConfig.Hostname = "localhost:8080"
 	} else {
-		config.Hostname = hostname
+		ApplicationRuntimeConfig.Hostname = hostname
 	}
 
 	port, hasPort := os.LookupEnv("COLLABORATE_PORT")
 	if !hasPort {
-		config.Port = ":8080"
+		ApplicationRuntimeConfig.Port = ":8080"
 	} else {
-		config.Port = port
+		ApplicationRuntimeConfig.Port = port
 	}
 
 	mode := os.Getenv("COLLABORATE_MODE")
 	if mode == "production" {
-		config.Mode = CONFIG_MODE_PRODUCTION
+		ApplicationRuntimeConfig.Mode = CONFIG_MODE_PRODUCTION
 	} else {
-		config.Mode = CONFIG_MODE_DEVELOPMENT
+		ApplicationRuntimeConfig.Mode = CONFIG_MODE_DEVELOPMENT
 	}
 
 	services, hasServices := os.LookupEnv("COLLABORATE_ENABLED_SERVICES")
 	if hasServices {
 		for _, service := range strings.Split(services, ",") {
-			config.EnabledServices[service] = true
+			ApplicationRuntimeConfig.EnabledServices[service] = true
 		}
 	}
-
-	return config
 }
