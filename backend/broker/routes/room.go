@@ -28,7 +28,7 @@ func CreateRoom(c *gin.Context) {
 	secret, _ := signing.GetHMACSecret()
 	roomCreationTokenString, _ := token.SignedString(secret)
 
-	c.SetCookie("RoomCreationToken", roomCreationTokenString, 24*60*60, fmt.Sprintf("/api/realtime/network-room/%s", room.Id), config.ApplicationRuntimeConfig.Hostname, true, true)
+	c.SetCookie("RoomCreationToken", roomCreationTokenString, 24*60*60, fmt.Sprintf("/api/realtime/room/%s", room.Id), config.ApplicationRuntimeConfig.Hostname, true, true)
 
 	c.JSON(http.StatusOK, room)
 }

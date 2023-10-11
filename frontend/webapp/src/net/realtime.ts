@@ -1,30 +1,29 @@
 import { onBeforeUnmount, onMounted } from 'vue';
+import { config } from '@/config';
+import { ClientMessage, ClientMessageType } from 'pb/Client';
+import { CloseCode } from 'pb/Connection';
+import { ServerMessage, ServerMessageType } from 'pb/Server';
 import mitt from 'mitt';
-import { config } from '@/config.ts';
-import {
-    ClientMessage,
-    ClientMessageType,
-    CloseCode,
-    ServerBroadcast,
-    ServerMessage,
-    ServerMessageType
-} from 'pb';
 
 export type RoomState = 'connecting' | 'open' | 'closed';
 
 type RoomEvents = {
     'state': RoomState,
-    'broadcast:MousePos': ServerBroadcast,
+    'client:UpdatePointers': ClientMessage,
+    'client:ChatMessage': ClientMessage,
     'error': string,
 }
 
 type RoomEventCallback = (event: any) => void;
 
+const RECONNECT_DELAY = 100;
+
 class Room {
-    roomId: string = 'lobby';
+    id: string = 'lobby';
     ws: WebSocket | undefined;
     bus = mitt<RoomEvents>();
     pendingMessages: ClientMessage[] = [];
+    reconnectDelay = RECONNECT_DELAY;
 
     sendPendingMessages = () => {
         this.pendingMessages.reverse();
@@ -57,8 +56,8 @@ class Room {
 
         this.bus.emit('state', 'connecting');
 
-        this.roomId = roomId;
-        this.ws = new WebSocket(`${config.api.realtime}/room/${this.roomId}`);
+        this.id = roomId;
+        this.ws = new WebSocket(`${config.api.realtime}/room/${this.id}`);
 
         this.ws.addEventListener('open', this.onOpen);
         this.ws.addEventListener('close', this.onClose);
@@ -67,27 +66,31 @@ class Room {
     };
 
     reconnect = () => {
-        console.log(`[Room] Reconnecting to ${this.roomId}`);
+        console.log(`[Room] Reconnecting to ${this.id} in ${this.reconnectDelay}ms`);
 
-        this.connect(this.roomId);
+        setTimeout(() => {
+            this.reconnectDelay *= 2;
+            this.connect(this.id);
+        }, this.reconnectDelay);
     };
 
     onOpen = () => {
-        console.log(`[Room] Opened connection to ${this.roomId}`);
+        console.log(`[Room] Opened connection to ${this.id}`);
 
         this.bus.emit('state', 'open');
+        this.reconnectDelay = RECONNECT_DELAY;
         this.sendPendingMessages();
     };
 
     onClose = async (ev: CloseEvent) => {
-        console.log(`[Room] Closed connection to ${this.roomId} with code (${ev.code}) for "${ev.reason}".`);
+        console.log(`[Room] Closed connection to ${this.id} with code (${ev.code}) for "${ev.reason}".`);
 
         this.bus.emit('state', 'closed');
 
         switch(ev.code) {
         // Close codes that warrant a reconnect.
         case 4401:
-            await fetch(`${config.api.realtimeHttp}/room/${this.roomId}/GuestAccess`);
+            //await fetch(`${config.api.realtimeHttp}/room/${this.id}/GuestAccess`);
             break;
 
             // Close codes do not requre a reconnect.
@@ -109,10 +112,10 @@ class Room {
         const message = ServerMessage.decode(binaryMessage);
 
         switch(message.type) {
-        case ServerMessageType.SERVER_MESSAGE_BROADCAST:
-            switch(message.broadcast!.message!.type) {
-                case ClientMessageType.CLIENT_MESSAGE_MOUSEPOS:
-                    this.bus.emit('broadcast:MousePos', message.broadcast!);
+        case ServerMessageType.RELAY:
+            switch(message.relay!.type) {
+            case ClientMessageType.UPDATE_POINTERS:
+                this.bus.emit('client:UpdatePointers', message.relay!);
             }
             break;
         }

@@ -27,6 +27,7 @@ module.exports = {
     'plugins': [
         '@typescript-eslint',
         'vue',
+        'import',
     ],
     'rules': {
         // Style
@@ -36,6 +37,7 @@ module.exports = {
         'semi': ['error', 'always'],
         'object-curly-spacing': ['error', 'always'],
         'comma-dangle': ['error', 'always-multiline'],
+        'import/extensions': ['error', 'always'],
 
         // Vue
         'vue/multi-word-component-names': 'off',

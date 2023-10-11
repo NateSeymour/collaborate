@@ -1,7 +1,5 @@
 <template>
-    <header>
-        
-    </header>
+    <ApplicationHeader />
     <div id="content">
         <RouterView />
     </div>
@@ -11,6 +9,7 @@
 </template>
 
 <script lang="ts" setup>
+import ApplicationHeader from '@/components/ApplicationHeader.vue';
 </script>
 
 <style lang="scss" scoped>

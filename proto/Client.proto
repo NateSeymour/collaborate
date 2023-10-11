@@ -22,13 +22,19 @@ enum ClientMessageType {
     CLIENT_MESSAGE_TYPE_UNSPECIFIED = 0;
     UPDATE_NICKNAME = 1;
     UPDATE_POINTERS = 2;
+    CHAT_MESSAGE = 3;
+}
+
+message ClientChatMessage {
+    string message = 2;
 }
 
 message ClientMessage {
     string userId = 1;
     ClientMessageType type = 2;
-    oneof update {
+    oneof data {
         string nickname = 3;
         PointerCollection pointers = 4;
+        ClientChatMessage chatMessage = 5;
     }
 }

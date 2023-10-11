@@ -20,8 +20,8 @@ router.beforeEach((to, from) => {
 
     if(!to.meta.requiresRoomConnection) {
         room.disconnect();
-    } else if(to.params.roomId !== from.params.roomId) {
-        room.connect(to.params.roomId as string);
+    } else if(to.params.id !== from.params.id) {
+        room.connect(to.params.id as string);
     }
 });
 

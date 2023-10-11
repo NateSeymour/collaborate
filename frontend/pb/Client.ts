@@ -53,6 +53,7 @@ export enum ClientMessageType {
   CLIENT_MESSAGE_TYPE_UNSPECIFIED = 0,
   UPDATE_NICKNAME = 1,
   UPDATE_POINTERS = 2,
+  CHAT_MESSAGE = 3,
   UNRECOGNIZED = -1,
 }
 
@@ -67,6 +68,9 @@ export function clientMessageTypeFromJSON(object: any): ClientMessageType {
     case 2:
     case "UPDATE_POINTERS":
       return ClientMessageType.UPDATE_POINTERS;
+    case 3:
+    case "CHAT_MESSAGE":
+      return ClientMessageType.CHAT_MESSAGE;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -82,6 +86,8 @@ export function clientMessageTypeToJSON(object: ClientMessageType): string {
       return "UPDATE_NICKNAME";
     case ClientMessageType.UPDATE_POINTERS:
       return "UPDATE_POINTERS";
+    case ClientMessageType.CHAT_MESSAGE:
+      return "CHAT_MESSAGE";
     case ClientMessageType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -95,11 +101,16 @@ export interface Client {
   pointers: PointerCollection | undefined;
 }
 
+export interface ClientChatMessage {
+  message: string;
+}
+
 export interface ClientMessage {
   userId: string;
   type: ClientMessageType;
   nickname?: string | undefined;
   pointers?: PointerCollection | undefined;
+  chatMessage?: ClientChatMessage | undefined;
 }
 
 function createBaseClient(): Client {
@@ -208,8 +219,65 @@ export const Client = {
   },
 };
 
+function createBaseClientChatMessage(): ClientChatMessage {
+  return { message: "" };
+}
+
+export const ClientChatMessage = {
+  encode(message: ClientChatMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.message !== "") {
+      writer.uint32(18).string(message.message);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ClientChatMessage {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClientChatMessage();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.message = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ClientChatMessage {
+    return { message: isSet(object.message) ? globalThis.String(object.message) : "" };
+  },
+
+  toJSON(message: ClientChatMessage): unknown {
+    const obj: any = {};
+    if (message.message !== "") {
+      obj.message = message.message;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClientChatMessage>, I>>(base?: I): ClientChatMessage {
+    return ClientChatMessage.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ClientChatMessage>, I>>(object: I): ClientChatMessage {
+    const message = createBaseClientChatMessage();
+    message.message = object.message ?? "";
+    return message;
+  },
+};
+
 function createBaseClientMessage(): ClientMessage {
-  return { userId: "", type: 0, nickname: undefined, pointers: undefined };
+  return { userId: "", type: 0, nickname: undefined, pointers: undefined, chatMessage: undefined };
 }
 
 export const ClientMessage = {
@@ -225,6 +293,9 @@ export const ClientMessage = {
     }
     if (message.pointers !== undefined) {
       PointerCollection.encode(message.pointers, writer.uint32(34).fork()).ldelim();
+    }
+    if (message.chatMessage !== undefined) {
+      ClientChatMessage.encode(message.chatMessage, writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
@@ -264,6 +335,13 @@ export const ClientMessage = {
 
           message.pointers = PointerCollection.decode(reader, reader.uint32());
           continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.chatMessage = ClientChatMessage.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -279,6 +357,7 @@ export const ClientMessage = {
       type: isSet(object.type) ? clientMessageTypeFromJSON(object.type) : 0,
       nickname: isSet(object.nickname) ? globalThis.String(object.nickname) : undefined,
       pointers: isSet(object.pointers) ? PointerCollection.fromJSON(object.pointers) : undefined,
+      chatMessage: isSet(object.chatMessage) ? ClientChatMessage.fromJSON(object.chatMessage) : undefined,
     };
   },
 
@@ -296,6 +375,9 @@ export const ClientMessage = {
     if (message.pointers !== undefined) {
       obj.pointers = PointerCollection.toJSON(message.pointers);
     }
+    if (message.chatMessage !== undefined) {
+      obj.chatMessage = ClientChatMessage.toJSON(message.chatMessage);
+    }
     return obj;
   },
 
@@ -309,6 +391,9 @@ export const ClientMessage = {
     message.nickname = object.nickname ?? undefined;
     message.pointers = (object.pointers !== undefined && object.pointers !== null)
       ? PointerCollection.fromPartial(object.pointers)
+      : undefined;
+    message.chatMessage = (object.chatMessage !== undefined && object.chatMessage !== null)
+      ? ClientChatMessage.fromPartial(object.chatMessage)
       : undefined;
     return message;
   },

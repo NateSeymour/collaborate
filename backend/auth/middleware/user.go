@@ -18,7 +18,7 @@ func UserMiddleware(c *gin.Context) {
 	// Parse the cookie as JWT.
 	token, _ := jwt.ParseWithClaims(userCookie.Value, &signing.UserToken{}, signing.JwtKeyFunc)
 	if claims, ok := token.Claims.(*signing.UserToken); ok && token.Valid {
-		c.Set("User", &claims.User)
+		c.Set("User", claims.User)
 	} else {
 		c.AbortWithStatus(http.StatusUnauthorized)
 		return
