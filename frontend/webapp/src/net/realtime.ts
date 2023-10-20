@@ -116,6 +116,11 @@ class Room {
             switch(message.relay!.type) {
             case ClientMessageType.UPDATE_POINTERS:
                 this.bus.emit('client:UpdatePointers', message.relay!);
+                break;
+
+            case ClientMessageType.CHAT_MESSAGE:
+                this.bus.emit('client:ChatMessage', message.relay!);
+                break;
             }
             break;
         }

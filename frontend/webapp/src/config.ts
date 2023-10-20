@@ -4,6 +4,11 @@ interface CollaborationConfig {
         auth: string,
         realtime: string,
     },
+    roomTemplates: {
+        name: string,
+        plugins: string[],
+        short: string,
+    }[],
 }
 
 const production = {
@@ -24,4 +29,16 @@ const development = {
 
 export const config: CollaborationConfig = {
     ...(process.env.NODE_ENV === 'development' ? development : production),
+    roomTemplates: [
+        {
+            name: 'Hangout',
+            plugins: ['@builtin/chat'],
+            short: 'Chat with your friends',
+        },
+        {
+            name: 'Custom',
+            plugins: [],
+            short: 'Build your own room',
+        },
+    ],
 };

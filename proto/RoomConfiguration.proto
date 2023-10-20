@@ -3,12 +3,14 @@ option go_package = "./pb";
 
 enum RoomType {
     ROOM_TYPE_UNSPECIFIED = 0;
-    ROOM_TYPE_STANDARD = 1;
-    ROOM_TYPE_LOBBY = 2;
+    STANDARD = 1;
+    FREE = 2;
 }
 
-message Room {
+message RoomConfiguration {
     RoomType type = 3;
     string id = 1;
+    string name = 5;
     uint64 expiry = 2;
+    repeated string plugins = 4;
 }

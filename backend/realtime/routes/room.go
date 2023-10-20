@@ -51,12 +51,12 @@ func GetRoom(c *gin.Context) {
 
 		token, _ := jwt.ParseWithClaims(creationToken.Value, &signing.RoomCreationToken{}, signing.JwtKeyFunc)
 		if claims, ok := token.Claims.(*signing.RoomCreationToken); ok && token.Valid {
-			if claims.Room.Id != roomId {
+			if claims.RoomConfiguration.Id != roomId {
 				util.CloseWebsocketConnection(conn, pb.CloseCode_CLOSE_CODE_UNAUTHORIZED)
 				return
 			}
 
-			network_room.Store[roomId] = network_room.New(claims.Room)
+			network_room.Store[roomId] = network_room.New(claims.RoomConfiguration)
 		} else {
 			util.CloseWebsocketConnection(conn, pb.CloseCode_CLOSE_CODE_NOTFOUND)
 			return

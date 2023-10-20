@@ -21,7 +21,7 @@ type NetworkRoom struct {
 	Disconnect chan *NetworkClient
 	Data       chan SocketData
 
-	Room *pb.Room
+	Configuration *pb.RoomConfiguration
 }
 
 var Store = map[string]*NetworkRoom{}
@@ -32,15 +32,15 @@ func (r *NetworkRoom) RoomHandler() {
 	for {
 		select {
 		case <-roomExpiry:
-			fmt.Printf("[NetworkRoom] %s has expired! Closing connections to %d client(s).\n", r.Room.Id, len(r.Clients))
+			fmt.Printf("[NetworkRoom] %s has expired! Closing connections to %d client(s).\n", r.Configuration.Id, len(r.Clients))
 
 			// Close all client connections.
 			for conn := range r.Clients {
 				util.CloseWebsocketConnection(conn, pb.CloseCode_CLOSE_CODE_ROOM_EXPIRED)
 			}
 
-			// Delete Room info
-			delete(Store, r.Room.Id)
+			// Delete Configuration info
+			delete(Store, r.Configuration.Id)
 
 			return
 		case <-pingTimer:
@@ -58,12 +58,12 @@ func (r *NetworkRoom) RoomHandler() {
 
 			fmt.Printf("[NetworkRoom] A client with the identifier %s has connected.\n", client.User.Id)
 		case msg := <-r.Data:
-			r.Broadcast(&msg)
+			r.RelayToAllClients(&msg)
 		}
 	}
 }
 
-func (r *NetworkRoom) Broadcast(msg *SocketData) {
+func (r *NetworkRoom) RelayToAllClients(msg *SocketData) {
 	// Set proper ID
 	msg.data.UserId = msg.client.User.Id
 
@@ -82,13 +82,13 @@ func (r *NetworkRoom) Broadcast(msg *SocketData) {
 	}
 }
 
-func New(room *pb.Room) *NetworkRoom {
+func New(roomConfiguration *pb.RoomConfiguration) *NetworkRoom {
 	networkRoom := &NetworkRoom{
-		Clients:    make(map[*websocket.Conn]*NetworkClient),
-		Connect:    make(chan *NetworkClient),
-		Disconnect: make(chan *NetworkClient),
-		Data:       make(chan SocketData),
-		Room:       room,
+		Clients:       make(map[*websocket.Conn]*NetworkClient),
+		Connect:       make(chan *NetworkClient),
+		Disconnect:    make(chan *NetworkClient),
+		Data:          make(chan SocketData),
+		Configuration: roomConfiguration,
 	}
 
 	go networkRoom.RoomHandler()

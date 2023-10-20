@@ -2,7 +2,7 @@ PB_SOURCES=Client.proto \
 	CommonTypes.proto  \
 	Connection.proto \
 	Pointer.proto \
-	Room.proto \
+	RoomConfiguration.proto \
 	Server.proto \
 	User.proto
 
@@ -20,7 +20,12 @@ pb-go:
 
 pb-ts: frontend-workspace
 	rm -rf ./frontend/pb/*.ts
-	protoc -I=./proto --plugin=./frontend/node_modules/.bin/protoc-gen-ts_proto --ts_proto_out=./frontend/pb $(PB_SOURCES)
+	protoc -I=./proto --plugin=./frontend/node_modules/.bin/protoc-gen-ts_proto --ts_proto_out=./frontend/pb \
+ 		--ts_proto_opt=forceLong=Long \
+        --ts_proto_opt=useDate=true \
+        --ts_proto_opt=env=browser \
+        --ts_proto_opt=esModuleInterop=true \
+        $(PB_SOURCES)
 
 pb: pb-go pb-ts
 

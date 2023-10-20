@@ -2,6 +2,7 @@ syntax = "proto3";
 option go_package = "./pb";
 
 import "Pointer.proto";
+import "google/protobuf/timestamp.proto";
 
 enum ClientRole {
     CLIENT_ROLE_UNSPECIFIED = 0;
@@ -26,12 +27,13 @@ enum ClientMessageType {
 }
 
 message ClientChatMessage {
-    string message = 2;
+    string text = 2;
 }
 
 message ClientMessage {
     string userId = 1;
     ClientMessageType type = 2;
+    google.protobuf.Timestamp timestamp = 6;
     oneof data {
         string nickname = 3;
         PointerCollection pointers = 4;

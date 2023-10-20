@@ -28,8 +28,8 @@ type LoginRequest struct {
 func Login(c *gin.Context) {
 	// Get body
 	body := &LoginRequest{}
-	bindErr := c.BindJSON(body)
-	if bindErr != nil {
+	bodyErr := c.BindJSON(body)
+	if bodyErr != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}

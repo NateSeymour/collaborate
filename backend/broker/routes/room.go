@@ -12,23 +12,37 @@ import (
 	"time"
 )
 
+type CreateRoomRequest struct {
+	Name             string   `json:"name" binding:"required"`
+	RequestedPlugins []string `json:"requestedPlugins" binding:"required"`
+}
+
 func CreateRoom(c *gin.Context) {
-	// Create Room info
-	room := &pb.Room{
-		Type:   pb.RoomType_ROOM_TYPE_STANDARD,
-		Id:     util.GenerateSecureId(20),
-		Expiry: uint64(time.Now().Add(24 * time.Hour).Unix()),
+	body := &CreateRoomRequest{}
+	bodyErr := c.BindJSON(body)
+	if bodyErr != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	// Create Configuration info
+	roomConfiguration := &pb.RoomConfiguration{
+		Name:    body.Name,
+		Type:    pb.RoomType_STANDARD,
+		Id:      util.GenerateSecureId(20),
+		Expiry:  uint64(time.Now().Add(24 * time.Hour).Unix()),
+		Plugins: body.RequestedPlugins,
 	}
 
 	// Create Owner token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, signing.RoomCreationToken{
-		Room:             room,
-		RegisteredClaims: jwt.RegisteredClaims{},
+		RoomConfiguration: roomConfiguration,
+		RegisteredClaims:  jwt.RegisteredClaims{},
 	})
 	secret, _ := signing.GetHMACSecret()
 	roomCreationTokenString, _ := token.SignedString(secret)
 
-	c.SetCookie("RoomCreationToken", roomCreationTokenString, 24*60*60, fmt.Sprintf("/api/realtime/room/%s", room.Id), config.ApplicationRuntimeConfig.Hostname, true, true)
+	c.SetCookie("RoomCreationToken", roomCreationTokenString, 24*60*60, fmt.Sprintf("/api/realtime/roomConfiguration/%s", roomConfiguration.Id), config.ApplicationRuntimeConfig.Hostname, true, true)
 
-	c.JSON(http.StatusOK, room)
+	c.JSON(http.StatusOK, roomConfiguration)
 }

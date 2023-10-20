@@ -11,6 +11,6 @@ type UserToken struct {
 }
 
 type RoomCreationToken struct {
-	*pb.Room
+	*pb.RoomConfiguration
 	jwt.RegisteredClaims
 }

@@ -1,6 +1,7 @@
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import _m0 from "protobufjs/minimal";
 import { PointerCollection } from "./Pointer";
+import { Timestamp } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "";
 
@@ -102,12 +103,13 @@ export interface Client {
 }
 
 export interface ClientChatMessage {
-  message: string;
+  text: string;
 }
 
 export interface ClientMessage {
   userId: string;
   type: ClientMessageType;
+  timestamp: Date | undefined;
   nickname?: string | undefined;
   pointers?: PointerCollection | undefined;
   chatMessage?: ClientChatMessage | undefined;
@@ -220,13 +222,13 @@ export const Client = {
 };
 
 function createBaseClientChatMessage(): ClientChatMessage {
-  return { message: "" };
+  return { text: "" };
 }
 
 export const ClientChatMessage = {
   encode(message: ClientChatMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.message !== "") {
-      writer.uint32(18).string(message.message);
+    if (message.text !== "") {
+      writer.uint32(18).string(message.text);
     }
     return writer;
   },
@@ -243,7 +245,7 @@ export const ClientChatMessage = {
             break;
           }
 
-          message.message = reader.string();
+          message.text = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -255,13 +257,13 @@ export const ClientChatMessage = {
   },
 
   fromJSON(object: any): ClientChatMessage {
-    return { message: isSet(object.message) ? globalThis.String(object.message) : "" };
+    return { text: isSet(object.text) ? globalThis.String(object.text) : "" };
   },
 
   toJSON(message: ClientChatMessage): unknown {
     const obj: any = {};
-    if (message.message !== "") {
-      obj.message = message.message;
+    if (message.text !== "") {
+      obj.text = message.text;
     }
     return obj;
   },
@@ -271,13 +273,20 @@ export const ClientChatMessage = {
   },
   fromPartial<I extends Exact<DeepPartial<ClientChatMessage>, I>>(object: I): ClientChatMessage {
     const message = createBaseClientChatMessage();
-    message.message = object.message ?? "";
+    message.text = object.text ?? "";
     return message;
   },
 };
 
 function createBaseClientMessage(): ClientMessage {
-  return { userId: "", type: 0, nickname: undefined, pointers: undefined, chatMessage: undefined };
+  return {
+    userId: "",
+    type: 0,
+    timestamp: undefined,
+    nickname: undefined,
+    pointers: undefined,
+    chatMessage: undefined,
+  };
 }
 
 export const ClientMessage = {
@@ -287,6 +296,9 @@ export const ClientMessage = {
     }
     if (message.type !== 0) {
       writer.uint32(16).int32(message.type);
+    }
+    if (message.timestamp !== undefined) {
+      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(50).fork()).ldelim();
     }
     if (message.nickname !== undefined) {
       writer.uint32(26).string(message.nickname);
@@ -320,6 +332,13 @@ export const ClientMessage = {
           }
 
           message.type = reader.int32() as any;
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.timestamp = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 3:
           if (tag !== 26) {
@@ -355,6 +374,7 @@ export const ClientMessage = {
     return {
       userId: isSet(object.userId) ? globalThis.String(object.userId) : "",
       type: isSet(object.type) ? clientMessageTypeFromJSON(object.type) : 0,
+      timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
       nickname: isSet(object.nickname) ? globalThis.String(object.nickname) : undefined,
       pointers: isSet(object.pointers) ? PointerCollection.fromJSON(object.pointers) : undefined,
       chatMessage: isSet(object.chatMessage) ? ClientChatMessage.fromJSON(object.chatMessage) : undefined,
@@ -368,6 +388,9 @@ export const ClientMessage = {
     }
     if (message.type !== 0) {
       obj.type = clientMessageTypeToJSON(message.type);
+    }
+    if (message.timestamp !== undefined) {
+      obj.timestamp = message.timestamp.toISOString();
     }
     if (message.nickname !== undefined) {
       obj.nickname = message.nickname;
@@ -388,6 +411,7 @@ export const ClientMessage = {
     const message = createBaseClientMessage();
     message.userId = object.userId ?? "";
     message.type = object.type ?? 0;
+    message.timestamp = object.timestamp ?? undefined;
     message.nickname = object.nickname ?? undefined;
     message.pointers = (object.pointers !== undefined && object.pointers !== null)
       ? PointerCollection.fromPartial(object.pointers)
@@ -410,6 +434,28 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+
+function toTimestamp(date: Date): Timestamp {
+  const seconds = date.getTime() / 1_000;
+  const nanos = (date.getTime() % 1_000) * 1_000_000;
+  return { seconds, nanos };
+}
+
+function fromTimestamp(t: Timestamp): Date {
+  let millis = (t.seconds || 0) * 1_000;
+  millis += (t.nanos || 0) / 1_000_000;
+  return new globalThis.Date(millis);
+}
+
+function fromJsonTimestamp(o: any): Date {
+  if (o instanceof globalThis.Date) {
+    return o;
+  } else if (typeof o === "string") {
+    return new globalThis.Date(o);
+  } else {
+    return fromTimestamp(Timestamp.fromJSON(o));
+  }
+}
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

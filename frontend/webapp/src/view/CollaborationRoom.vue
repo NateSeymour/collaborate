@@ -2,20 +2,8 @@
     <div class="collaboration-room">
         <div class="navigation">
             <nav>
-                <RouterLink :to="`/room/${route.params.id}/talk`">
-                    <img src="../assets/icons/talk-48.png" alt="Talk Together">
-                </RouterLink>
                 <RouterLink :to="`/room/${route.params.id}/chat`">
                     <img src="../assets/icons/chat-48.png" alt="Chat Together">
-                </RouterLink>
-                <RouterLink :to="`/room/${route.params.id}/draw`">
-                    <img src="../assets/icons/paint-48.png" alt="Draw Together">
-                </RouterLink>
-                <RouterLink :to="`/room/${route.params.id}/write`">
-                    <img src="../assets/icons/write-48.png" alt="Write Together">
-                </RouterLink>
-                <RouterLink :to="`/room/${route.params.id}/design`">
-                    <img src="../assets/icons/design-48.png" alt="Design Together">
                 </RouterLink>
             </nav>
         </div>
