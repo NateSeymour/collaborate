@@ -1,38 +1,27 @@
-import { Component, Ref } from 'vue';
+import {Component} from "vue";
 
-interface PluginStore {
-    [key: string]: Ref,
+import chat from '@/plugin/@official/chat/manifest.ts';
+
+export interface PluginConfiguration {
+    name: string,
+    description: string,
+    version: string,
 }
-
-type PluginSetupFunction = (plugin: Plugin) => PluginStore;
 
 export class Plugin {
-    component: Component;
-    store: PluginStore;
+    config: PluginConfiguration = {
+        name: '@official/generic',
+        description: 'Generic Plugin',
+        version: '0.0.0',
+    };
 
-    constructor(component: Component, setup: PluginSetupFunction) {
-        this.component = component;
-
-        this.store = setup(this);
+    getActivity(): Promise<Component> {
+        return import('@/components/Dummy.vue');
     }
+
+    constructor() {}
 }
 
-interface PluginConfiguration {
-    name: string,
-}
-
-interface PluginImportType {
-    pluginConfiguration: PluginConfiguration,
-    activity: Component | undefined,
-    plugin: Plugin,
-}
-
-type PluginFunction = () => Promise<PluginImportType>;
-
-interface PluginDefinitions {
-    [key: string]: PluginFunction,
-}
-
-export const plugins: PluginDefinitions = {
-    '@builtin/chat': () => import('@/plugin/chat'),
-};
+export const officialPlugins: Plugin[] = [
+    chat,
+];
