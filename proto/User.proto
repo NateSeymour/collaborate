@@ -11,9 +11,9 @@ message User {
     UserSubscriptionType subscriptionType = 1;
     string id = 5;
 
-    optional string preferredNickname = 2;
-    optional string email = 3;
-    optional string username = 4;
-    optional string firstName = 6;
-    optional string lastName = 7;
+    string preferredNickname = 2;
+    string email = 3;
+    string username = 4;
+    string firstName = 6;
+    string lastName = 7;
 }

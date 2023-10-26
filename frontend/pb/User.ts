@@ -45,23 +45,15 @@ export function userSubscriptionTypeToJSON(object: UserSubscriptionType): string
 export interface User {
   subscriptionType: UserSubscriptionType;
   id: string;
-  preferredNickname?: string | undefined;
-  email?: string | undefined;
-  username?: string | undefined;
-  firstName?: string | undefined;
-  lastName?: string | undefined;
+  preferredNickname: string;
+  email: string;
+  username: string;
+  firstName: string;
+  lastName: string;
 }
 
 function createBaseUser(): User {
-  return {
-    subscriptionType: 0,
-    id: "",
-    preferredNickname: undefined,
-    email: undefined,
-    username: undefined,
-    firstName: undefined,
-    lastName: undefined,
-  };
+  return { subscriptionType: 0, id: "", preferredNickname: "", email: "", username: "", firstName: "", lastName: "" };
 }
 
 export const User = {
@@ -72,19 +64,19 @@ export const User = {
     if (message.id !== "") {
       writer.uint32(42).string(message.id);
     }
-    if (message.preferredNickname !== undefined) {
+    if (message.preferredNickname !== "") {
       writer.uint32(18).string(message.preferredNickname);
     }
-    if (message.email !== undefined) {
+    if (message.email !== "") {
       writer.uint32(26).string(message.email);
     }
-    if (message.username !== undefined) {
+    if (message.username !== "") {
       writer.uint32(34).string(message.username);
     }
-    if (message.firstName !== undefined) {
+    if (message.firstName !== "") {
       writer.uint32(50).string(message.firstName);
     }
-    if (message.lastName !== undefined) {
+    if (message.lastName !== "") {
       writer.uint32(58).string(message.lastName);
     }
     return writer;
@@ -159,11 +151,11 @@ export const User = {
     return {
       subscriptionType: isSet(object.subscriptionType) ? userSubscriptionTypeFromJSON(object.subscriptionType) : 0,
       id: isSet(object.id) ? globalThis.String(object.id) : "",
-      preferredNickname: isSet(object.preferredNickname) ? globalThis.String(object.preferredNickname) : undefined,
-      email: isSet(object.email) ? globalThis.String(object.email) : undefined,
-      username: isSet(object.username) ? globalThis.String(object.username) : undefined,
-      firstName: isSet(object.firstName) ? globalThis.String(object.firstName) : undefined,
-      lastName: isSet(object.lastName) ? globalThis.String(object.lastName) : undefined,
+      preferredNickname: isSet(object.preferredNickname) ? globalThis.String(object.preferredNickname) : "",
+      email: isSet(object.email) ? globalThis.String(object.email) : "",
+      username: isSet(object.username) ? globalThis.String(object.username) : "",
+      firstName: isSet(object.firstName) ? globalThis.String(object.firstName) : "",
+      lastName: isSet(object.lastName) ? globalThis.String(object.lastName) : "",
     };
   },
 
@@ -175,19 +167,19 @@ export const User = {
     if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.preferredNickname !== undefined) {
+    if (message.preferredNickname !== "") {
       obj.preferredNickname = message.preferredNickname;
     }
-    if (message.email !== undefined) {
+    if (message.email !== "") {
       obj.email = message.email;
     }
-    if (message.username !== undefined) {
+    if (message.username !== "") {
       obj.username = message.username;
     }
-    if (message.firstName !== undefined) {
+    if (message.firstName !== "") {
       obj.firstName = message.firstName;
     }
-    if (message.lastName !== undefined) {
+    if (message.lastName !== "") {
       obj.lastName = message.lastName;
     }
     return obj;
@@ -200,11 +192,11 @@ export const User = {
     const message = createBaseUser();
     message.subscriptionType = object.subscriptionType ?? 0;
     message.id = object.id ?? "";
-    message.preferredNickname = object.preferredNickname ?? undefined;
-    message.email = object.email ?? undefined;
-    message.username = object.username ?? undefined;
-    message.firstName = object.firstName ?? undefined;
-    message.lastName = object.lastName ?? undefined;
+    message.preferredNickname = object.preferredNickname ?? "";
+    message.email = object.email ?? "";
+    message.username = object.username ?? "";
+    message.firstName = object.firstName ?? "";
+    message.lastName = object.lastName ?? "";
     return message;
   },
 };

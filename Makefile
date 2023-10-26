@@ -27,7 +27,11 @@ pb-ts: frontend-workspace
         --ts_proto_opt=esModuleInterop=true \
         $(PB_SOURCES)
 
-pb: pb-go pb-ts
+pb-c:
+	rm -rf ./av/src/pb/*
+	protoc -I=./proto --c_out=./av/src/pb $(PB_SOURCES)
+
+pb: pb-go pb-ts pb-c
 
 webapp: pb-ts output-dir
 	npm --prefix ./frontend/webapp run lint:fix
