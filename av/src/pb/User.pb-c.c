@@ -22,9 +22,7 @@ void user__init(User *message)
 size_t user__get_packed_size(const User *message)
 {
 	assert(message->base.descriptor == &user__descriptor);
-	return
-	    protobuf_c_message_get_packed_size((const ProtobufCMessage
-						*)(message));
+	return protobuf_c_message_get_packed_size((const ProtobufCMessage *)(message));
 }
 
 size_t user__pack(const User *message, uint8_t *out)
@@ -40,8 +38,8 @@ size_t user__pack_to_buffer(const User *message, ProtobufCBuffer *buffer)
 						 message, buffer);
 }
 
-User *user__unpack
-    (ProtobufCAllocator * allocator, size_t len, const uint8_t * data) {
+User *user__unpack(ProtobufCAllocator *allocator, size_t len, const uint8_t *data)
+{
 	return (User *)
 	    protobuf_c_message_unpack(&user__descriptor, allocator, len, data);
 }
@@ -51,8 +49,7 @@ void user__free_unpacked(User *message, ProtobufCAllocator *allocator)
 	if (!message)
 		return;
 	assert(message->base.descriptor == &user__descriptor);
-	protobuf_c_message_free_unpacked((ProtobufCMessage *) message,
-					 allocator);
+	protobuf_c_message_free_unpacked((ProtobufCMessage *) message, allocator);
 }
 
 static const ProtobufCFieldDescriptor user__field_descriptors[7] = {
@@ -172,8 +169,7 @@ const ProtobufCMessageDescriptor user__descriptor = {
 	NULL, NULL, NULL	/* reserved[123] */
 };
 
-static const ProtobufCEnumValue
-    user_subscription_type__enum_values_by_number[3] = {
+static const ProtobufCEnumValue user_subscription_type__enum_values_by_number[3] = {
 	{"USER_SUBSCRIPTION_UNSPECIFIED",
 	 "USER_SUBSCRIPTION_TYPE__USER_SUBSCRIPTION_UNSPECIFIED", 0},
 	{"USER_SUBSCRIPTION_FREE",
@@ -187,8 +183,7 @@ static const ProtobufCIntRange user_subscription_type__value_ranges[] = {
 	{0, 0}, {0, 3}
 };
 
-static const ProtobufCEnumValueIndex
-    user_subscription_type__enum_values_by_name[3] = {
+static const ProtobufCEnumValueIndex user_subscription_type__enum_values_by_name[3] = {
 	{"USER_SUBSCRIPTION_FREE", 1},
 	{"USER_SUBSCRIPTION_PREMIUM", 2},
 	{"USER_SUBSCRIPTION_UNSPECIFIED", 0},

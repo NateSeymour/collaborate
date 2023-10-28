@@ -41,61 +41,43 @@ GST_DEBUG_CATEGORY_STATIC(gst_spectaclesink_debug_category);
  * prototypes 
  */
 
-static void gst_spectaclesink_set_property(GObject * object,
-					   guint property_id,
-					   const GValue * value,
-					   GParamSpec * pspec);
-static void gst_spectaclesink_get_property(GObject * object,
-					   guint property_id,
-					   GValue * value, GParamSpec * pspec);
+static void gst_spectaclesink_set_property(GObject * object, guint property_id, const GValue * value, GParamSpec * pspec);
+static void gst_spectaclesink_get_property(GObject * object, guint property_id, GValue * value, GParamSpec * pspec);
 static void gst_spectaclesink_dispose(GObject * object);
 static void gst_spectaclesink_finalize(GObject * object);
 
-static GstCaps *gst_spectaclesink_get_caps(GstBaseSink * sink,
-					   GstCaps * filter);
+static GstCaps *gst_spectaclesink_get_caps(GstBaseSink * sink, GstCaps * filter);
 static gboolean gst_spectaclesink_set_caps(GstBaseSink * sink, GstCaps * caps);
 static GstCaps *gst_spectaclesink_fixate(GstBaseSink * sink, GstCaps * caps);
-static gboolean gst_spectaclesink_activate_pull(GstBaseSink * sink,
-						gboolean active);
-static void gst_spectaclesink_get_times(GstBaseSink * sink,
-					GstBuffer * buffer,
-					GstClockTime * start,
-					GstClockTime * end);
-static gboolean gst_spectaclesink_propose_allocation(GstBaseSink * sink,
-						     GstQuery * query);
+static gboolean gst_spectaclesink_activate_pull(GstBaseSink * sink, gboolean active);
+static void gst_spectaclesink_get_times(GstBaseSink * sink, GstBuffer * buffer, GstClockTime * start, GstClockTime * end);
+static gboolean gst_spectaclesink_propose_allocation(GstBaseSink * sink, GstQuery * query);
 static gboolean gst_spectaclesink_start(GstBaseSink * sink);
 static gboolean gst_spectaclesink_stop(GstBaseSink * sink);
 static gboolean gst_spectaclesink_unlock(GstBaseSink * sink);
 static gboolean gst_spectaclesink_unlock_stop(GstBaseSink * sink);
 static gboolean gst_spectaclesink_query(GstBaseSink * sink, GstQuery * query);
 static gboolean gst_spectaclesink_event(GstBaseSink * sink, GstEvent * event);
-static GstFlowReturn gst_spectaclesink_wait_event(GstBaseSink * sink,
-						  GstEvent * event);
-static GstFlowReturn gst_spectaclesink_prepare(GstBaseSink * sink,
-					       GstBuffer * buffer);
-static GstFlowReturn gst_spectaclesink_prepare_list(GstBaseSink * sink,
-						    GstBufferList *
-						    buffer_list);
-static GstFlowReturn gst_spectaclesink_preroll(GstBaseSink * sink,
-					       GstBuffer * buffer);
-static GstFlowReturn gst_spectaclesink_render(GstBaseSink * sink,
-					      GstBuffer * buffer);
-static GstFlowReturn gst_spectaclesink_render_list(GstBaseSink * sink,
-						   GstBufferList * buffer_list);
+static GstFlowReturn gst_spectaclesink_wait_event(GstBaseSink * sink, GstEvent * event);
+static GstFlowReturn gst_spectaclesink_prepare(GstBaseSink * sink, GstBuffer * buffer);
+static GstFlowReturn gst_spectaclesink_prepare_list(GstBaseSink * sink, GstBufferList * buffer_list);
+static GstFlowReturn gst_spectaclesink_preroll(GstBaseSink * sink, GstBuffer * buffer);
+static GstFlowReturn gst_spectaclesink_render(GstBaseSink * sink, GstBuffer * buffer);
+static GstFlowReturn gst_spectaclesink_render_list(GstBaseSink * sink, GstBufferList * buffer_list);
 
 enum {
-	PROP_0
+	PROP_0,
+	PROP_CONN_POINTER,
 };
 
 /*
  * pad templates 
  */
 
-static GstStaticPadTemplate gst_spectaclesink_sink_template =
-GST_STATIC_PAD_TEMPLATE("sink",
-			GST_PAD_SINK,
-			GST_PAD_ALWAYS,
-			GST_STATIC_CAPS("application/unknown"));
+static GstStaticPadTemplate gst_spectaclesink_sink_template = GST_STATIC_PAD_TEMPLATE("sink",
+										      GST_PAD_SINK,
+										      GST_PAD_ALWAYS,
+										      GST_STATIC_CAPS("video/webm" "audio/webm"));
 
 /*
  * class initialization 
@@ -103,9 +85,7 @@ GST_STATIC_PAD_TEMPLATE("sink",
 
 G_DEFINE_TYPE_WITH_CODE(GstSpectaclesink, gst_spectaclesink,
 			GST_TYPE_BASE_SINK,
-			GST_DEBUG_CATEGORY_INIT
-			(gst_spectaclesink_debug_category, "spectaclesink",
-			 0, "debug category for spectaclesink element"));
+			GST_DEBUG_CATEGORY_INIT(gst_spectaclesink_debug_category, "spectaclesink", 0, "debug category for spectaclesink element"));
 
 static void gst_spectaclesink_class_init(GstSpectaclesinkClass *klass)
 {
@@ -116,70 +96,61 @@ static void gst_spectaclesink_class_init(GstSpectaclesinkClass *klass)
 	 * Setting up pads and setting metadata should be moved to
 	 * base_class_init if you intend to subclass this class. 
 	 */
-	gst_element_class_add_static_pad_template(GST_ELEMENT_CLASS(klass),
-						  &gst_spectaclesink_sink_template);
+	gst_element_class_add_static_pad_template(GST_ELEMENT_CLASS(klass), &gst_spectaclesink_sink_template);
 
 	gst_element_class_set_static_metadata(GST_ELEMENT_CLASS(klass),
-					      "FIXME Long name", "Generic",
-					      "FIXME Description",
-					      "FIXME <fixme@example.com>");
+					      "FIXME Long name", "Generic", "FIXME Description", "FIXME <fixme@example.com>");
 
 	gobject_class->set_property = gst_spectaclesink_set_property;
 	gobject_class->get_property = gst_spectaclesink_get_property;
 	gobject_class->dispose = gst_spectaclesink_dispose;
 	gobject_class->finalize = gst_spectaclesink_finalize;
-	base_sink_class->get_caps =
-	    GST_DEBUG_FUNCPTR(gst_spectaclesink_get_caps);
-	base_sink_class->set_caps =
-	    GST_DEBUG_FUNCPTR(gst_spectaclesink_set_caps);
+	base_sink_class->get_caps = GST_DEBUG_FUNCPTR(gst_spectaclesink_get_caps);
+	base_sink_class->set_caps = GST_DEBUG_FUNCPTR(gst_spectaclesink_set_caps);
 	base_sink_class->fixate = GST_DEBUG_FUNCPTR(gst_spectaclesink_fixate);
-	base_sink_class->activate_pull =
-	    GST_DEBUG_FUNCPTR(gst_spectaclesink_activate_pull);
-	base_sink_class->get_times =
-	    GST_DEBUG_FUNCPTR(gst_spectaclesink_get_times);
-	base_sink_class->propose_allocation =
-	    GST_DEBUG_FUNCPTR(gst_spectaclesink_propose_allocation);
+	base_sink_class->activate_pull = GST_DEBUG_FUNCPTR(gst_spectaclesink_activate_pull);
+	base_sink_class->get_times = GST_DEBUG_FUNCPTR(gst_spectaclesink_get_times);
+	base_sink_class->propose_allocation = GST_DEBUG_FUNCPTR(gst_spectaclesink_propose_allocation);
 	base_sink_class->start = GST_DEBUG_FUNCPTR(gst_spectaclesink_start);
 	base_sink_class->stop = GST_DEBUG_FUNCPTR(gst_spectaclesink_stop);
 	base_sink_class->unlock = GST_DEBUG_FUNCPTR(gst_spectaclesink_unlock);
-	base_sink_class->unlock_stop =
-	    GST_DEBUG_FUNCPTR(gst_spectaclesink_unlock_stop);
+	base_sink_class->unlock_stop = GST_DEBUG_FUNCPTR(gst_spectaclesink_unlock_stop);
 	base_sink_class->query = GST_DEBUG_FUNCPTR(gst_spectaclesink_query);
 	base_sink_class->event = GST_DEBUG_FUNCPTR(gst_spectaclesink_event);
-	base_sink_class->wait_event =
-	    GST_DEBUG_FUNCPTR(gst_spectaclesink_wait_event);
+	base_sink_class->wait_event = GST_DEBUG_FUNCPTR(gst_spectaclesink_wait_event);
 	base_sink_class->prepare = GST_DEBUG_FUNCPTR(gst_spectaclesink_prepare);
-	base_sink_class->prepare_list =
-	    GST_DEBUG_FUNCPTR(gst_spectaclesink_prepare_list);
+	base_sink_class->prepare_list = GST_DEBUG_FUNCPTR(gst_spectaclesink_prepare_list);
 	base_sink_class->preroll = GST_DEBUG_FUNCPTR(gst_spectaclesink_preroll);
 	base_sink_class->render = GST_DEBUG_FUNCPTR(gst_spectaclesink_render);
-	base_sink_class->render_list =
-	    GST_DEBUG_FUNCPTR(gst_spectaclesink_render_list);
+	base_sink_class->render_list = GST_DEBUG_FUNCPTR(gst_spectaclesink_render_list);
 
+	// Add properties
+	g_object_class_install_property(gobject_class, PROP_CONN_POINTER, g_param_spec_pointer("connection", "Connection", "", G_PARAM_READWRITE));
 }
 
 static void gst_spectaclesink_init(GstSpectaclesink *spectaclesink)
 {
+	spectaclesink->conn = NULL;
 }
 
-void
-gst_spectaclesink_set_property(GObject *object, guint property_id,
-			       const GValue *value, GParamSpec *pspec)
+void gst_spectaclesink_set_property(GObject *object, guint property_id, const GValue *value, GParamSpec *pspec)
 {
 	GstSpectaclesink *spectaclesink = GST_SPECTACLESINK(object);
 
 	GST_DEBUG_OBJECT(spectaclesink, "set_property");
 
 	switch (property_id) {
+	case PROP_CONN_POINTER:{
+			spectaclesink->conn = g_object_ref(g_value_get_pointer(value));
+			break;
+		}
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
 		break;
 	}
 }
 
-void
-gst_spectaclesink_get_property(GObject *object, guint property_id,
-			       GValue *value, GParamSpec *pspec)
+void gst_spectaclesink_get_property(GObject *object, guint property_id, GValue *value, GParamSpec *pspec)
 {
 	GstSpectaclesink *spectaclesink = GST_SPECTACLESINK(object);
 
@@ -254,8 +225,7 @@ static GstCaps *gst_spectaclesink_fixate(GstBaseSink *sink, GstCaps *caps)
 /*
  * start or stop a pulling thread 
  */
-static gboolean
-gst_spectaclesink_activate_pull(GstBaseSink *sink, gboolean active)
+static gboolean gst_spectaclesink_activate_pull(GstBaseSink *sink, gboolean active)
 {
 	GstSpectaclesink *spectaclesink = GST_SPECTACLESINK(sink);
 
@@ -267,9 +237,7 @@ gst_spectaclesink_activate_pull(GstBaseSink *sink, gboolean active)
 /*
  * get the start and end times for syncing on this buffer 
  */
-static void
-gst_spectaclesink_get_times(GstBaseSink *sink, GstBuffer *buffer,
-			    GstClockTime *start, GstClockTime *end)
+static void gst_spectaclesink_get_times(GstBaseSink *sink, GstBuffer *buffer, GstClockTime *start, GstClockTime *end)
 {
 	GstSpectaclesink *spectaclesink = GST_SPECTACLESINK(sink);
 
@@ -280,8 +248,7 @@ gst_spectaclesink_get_times(GstBaseSink *sink, GstBuffer *buffer,
 /*
  * propose allocation parameters for upstream 
  */
-static gboolean
-gst_spectaclesink_propose_allocation(GstBaseSink *sink, GstQuery *query)
+static gboolean gst_spectaclesink_propose_allocation(GstBaseSink *sink, GstQuery *query)
 {
 	GstSpectaclesink *spectaclesink = GST_SPECTACLESINK(sink);
 
@@ -365,8 +332,7 @@ static gboolean gst_spectaclesink_event(GstBaseSink *sink, GstEvent *event)
 /*
  * wait for eos or gap, subclasses should chain up to parent first 
  */
-static GstFlowReturn
-gst_spectaclesink_wait_event(GstBaseSink *sink, GstEvent *event)
+static GstFlowReturn gst_spectaclesink_wait_event(GstBaseSink *sink, GstEvent *event)
 {
 	GstSpectaclesink *spectaclesink = GST_SPECTACLESINK(sink);
 
@@ -378,8 +344,7 @@ gst_spectaclesink_wait_event(GstBaseSink *sink, GstEvent *event)
 /*
  * notify subclass of buffer or list before doing sync 
  */
-static GstFlowReturn
-gst_spectaclesink_prepare(GstBaseSink *sink, GstBuffer *buffer)
+static GstFlowReturn gst_spectaclesink_prepare(GstBaseSink *sink, GstBuffer *buffer)
 {
 	GstSpectaclesink *spectaclesink = GST_SPECTACLESINK(sink);
 
@@ -388,8 +353,7 @@ gst_spectaclesink_prepare(GstBaseSink *sink, GstBuffer *buffer)
 	return GST_FLOW_OK;
 }
 
-static GstFlowReturn
-gst_spectaclesink_prepare_list(GstBaseSink *sink, GstBufferList *buffer_list)
+static GstFlowReturn gst_spectaclesink_prepare_list(GstBaseSink *sink, GstBufferList *buffer_list)
 {
 	GstSpectaclesink *spectaclesink = GST_SPECTACLESINK(sink);
 
@@ -401,8 +365,7 @@ gst_spectaclesink_prepare_list(GstBaseSink *sink, GstBufferList *buffer_list)
 /*
  * notify subclass of preroll buffer or real buffer 
  */
-static GstFlowReturn
-gst_spectaclesink_preroll(GstBaseSink *sink, GstBuffer *buffer)
+static GstFlowReturn gst_spectaclesink_preroll(GstBaseSink *sink, GstBuffer *buffer)
 {
 	GstSpectaclesink *spectaclesink = GST_SPECTACLESINK(sink);
 
@@ -411,8 +374,7 @@ gst_spectaclesink_preroll(GstBaseSink *sink, GstBuffer *buffer)
 	return GST_FLOW_OK;
 }
 
-static GstFlowReturn
-gst_spectaclesink_render(GstBaseSink *sink, GstBuffer *buffer)
+static GstFlowReturn gst_spectaclesink_render(GstBaseSink *sink, GstBuffer *buffer)
 {
 	GstSpectaclesink *spectaclesink = GST_SPECTACLESINK(sink);
 
@@ -424,8 +386,7 @@ gst_spectaclesink_render(GstBaseSink *sink, GstBuffer *buffer)
 /*
  * Render a BufferList 
  */
-static GstFlowReturn
-gst_spectaclesink_render_list(GstBaseSink *sink, GstBufferList *buffer_list)
+static GstFlowReturn gst_spectaclesink_render_list(GstBaseSink *sink, GstBufferList *buffer_list)
 {
 	GstSpectaclesink *spectaclesink = GST_SPECTACLESINK(sink);
 
@@ -441,8 +402,7 @@ static gboolean plugin_init(GstPlugin *plugin)
 	 * FIXME Remember to set the rank if it's an element that is meant to
 	 * be autoplugged by decodebin. 
 	 */
-	return gst_element_register(plugin, "spectaclesink", GST_RANK_NONE,
-				    GST_TYPE_SPECTACLESINK);
+	return gst_element_register(plugin, "spectaclesink", GST_RANK_NONE, GST_TYPE_SPECTACLESINK);
 }
 
 /*
@@ -465,8 +425,4 @@ static gboolean plugin_init(GstPlugin *plugin)
 #endif
 
 GST_PLUGIN_DEFINE(GST_VERSION_MAJOR,
-		  GST_VERSION_MINOR,
-		  spectaclesink,
-		  "FIXME plugin description",
-		  plugin_init, VERSION, "LGPL", PACKAGE_NAME,
-		  GST_PACKAGE_ORIGIN)
+		  GST_VERSION_MINOR, spectaclesink, "FIXME plugin description", plugin_init, VERSION, "LGPL", PACKAGE_NAME, GST_PACKAGE_ORIGIN)

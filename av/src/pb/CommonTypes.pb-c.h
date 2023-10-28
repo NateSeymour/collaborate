@@ -26,8 +26,7 @@ typedef enum _PointerType {
 	POINTER_TYPE__POINTER_TYPE_UNSPECIFIED = 0,
 	POINTER_TYPE__POINTER_TYPE_POINTER = 1,
 	POINTER_TYPE__POINTER_TYPE_CURSOR = 2,
-	POINTER_TYPE__POINTER_TYPE_TOUCH = 3
-	    PROTOBUF_C__FORCE_ENUM_TO_BE_INT_SIZE(POINTER_TYPE)
+	POINTER_TYPE__POINTER_TYPE_TOUCH = 3 PROTOBUF_C__FORCE_ENUM_TO_BE_INT_SIZE(POINTER_TYPE)
 } PointerType;
 
 /*
@@ -49,12 +48,9 @@ struct Coordinates {
 void coordinates__init(Coordinates * message);
 size_t coordinates__get_packed_size(const Coordinates * message);
 size_t coordinates__pack(const Coordinates * message, uint8_t * out);
-size_t coordinates__pack_to_buffer(const Coordinates * message,
-				   ProtobufCBuffer * buffer);
-Coordinates *coordinates__unpack(ProtobufCAllocator * allocator,
-				 size_t len, const uint8_t * data);
-void coordinates__free_unpacked(Coordinates * message,
-				ProtobufCAllocator * allocator);
+size_t coordinates__pack_to_buffer(const Coordinates * message, ProtobufCBuffer * buffer);
+Coordinates *coordinates__unpack(ProtobufCAllocator * allocator, size_t len, const uint8_t * data);
+void coordinates__free_unpacked(Coordinates * message, ProtobufCAllocator * allocator);
 /*
  * --- per-message closures --- 
  */

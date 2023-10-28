@@ -10,6 +10,12 @@ struct _CollaborateRoom {
 	// pipeline
 	GstElement *pipeline;
 	GstElement *source;
+	GstElement *encoder;
+	GstElement *muxxer;
+	GstElement *sink;
+
+	// Clients
+	GList *clients;
 };
 
 G_DEFINE_TYPE(CollaborateRoom, collaborate_room, G_TYPE_OBJECT);
@@ -25,9 +31,18 @@ static void collaborate_room_init(CollaborateRoom *self)
 	self->pipeline = gst_pipeline_new(NULL);
 
 	self->source = gst_element_factory_make("videotestsrc", "source");
+	self->encoder = gst_element_factory_make("av1enc", "encoder");
+	self->muxxer = gst_element_factory_make("webmmux", "muxxer");
+	self->sink = gst_element_factory_make("spectaclesink", "sink");
 
-	gst_bin_add_many(GST_BIN(self->pipeline), self->source, NULL);
-	res = gst_element_link_many(self->source, NULL);
+	if (!self->pipeline || !self->source || !self->encoder || !self->muxxer || !self->sink) {
+		g_error("[Room] Failed to create an element of the pipeline! %p, %p, %p, %p, %p", self->pipeline, self->source, self->encoder,
+			self->muxxer, self->sink);
+		return;
+	}
+
+	gst_bin_add_many(GST_BIN(self->pipeline), self->source, self->encoder, self->muxxer, self->sink, NULL);
+	res = gst_element_link_many(self->source, self->encoder, self->muxxer, self->sink, NULL);
 	if (!res) {
 		g_error("[Room] Failed to create pipeline!");
 		return;
@@ -36,8 +51,13 @@ static void collaborate_room_init(CollaborateRoom *self)
 
 static void collaborate_room_dispose(CollaborateRoom *self)
 {
+	gst_object_unref(self->sink);
+	gst_object_unref(self->muxxer);
+	gst_object_unref(self->encoder);
 	gst_object_unref(self->source);
 	gst_object_unref(self->pipeline);
+
+	//g_list_free(self->clients);
 }
 
 CollaborateRoom *collaborate_room_new(void)

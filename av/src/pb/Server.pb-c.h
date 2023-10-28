@@ -25,8 +25,7 @@ typedef struct ServerMessage ServerMessage;
 
 typedef enum _ServerMessageType {
 	SERVER_MESSAGE_TYPE__SERVER_MESSAGE_UNSPECIFIED = 0,
-	SERVER_MESSAGE_TYPE__RELAY = 1
-	    PROTOBUF_C__FORCE_ENUM_TO_BE_INT_SIZE(SERVER_MESSAGE_TYPE)
+	SERVER_MESSAGE_TYPE__RELAY = 1 PROTOBUF_C__FORCE_ENUM_TO_BE_INT_SIZE(SERVER_MESSAGE_TYPE)
 } ServerMessageType;
 
 /*
@@ -35,8 +34,7 @@ typedef enum _ServerMessageType {
 
 typedef enum {
 	SERVER_MESSAGE__MESSAGE__NOT_SET = 0,
-	SERVER_MESSAGE__MESSAGE_RELAY = 2
-	    PROTOBUF_C__FORCE_ENUM_TO_BE_INT_SIZE(SERVER_MESSAGE__MESSAGE__CASE)
+	SERVER_MESSAGE__MESSAGE_RELAY = 2 PROTOBUF_C__FORCE_ENUM_TO_BE_INT_SIZE(SERVER_MESSAGE__MESSAGE__CASE)
 } ServerMessage__MessageCase;
 
 struct ServerMessage {
@@ -57,12 +55,9 @@ struct ServerMessage {
 void server_message__init(ServerMessage * message);
 size_t server_message__get_packed_size(const ServerMessage * message);
 size_t server_message__pack(const ServerMessage * message, uint8_t * out);
-size_t server_message__pack_to_buffer(const ServerMessage *
-				      message, ProtobufCBuffer * buffer);
-ServerMessage *server_message__unpack(ProtobufCAllocator * allocator,
-				      size_t len, const uint8_t * data);
-void server_message__free_unpacked(ServerMessage * message,
-				   ProtobufCAllocator * allocator);
+size_t server_message__pack_to_buffer(const ServerMessage * message, ProtobufCBuffer * buffer);
+ServerMessage *server_message__unpack(ProtobufCAllocator * allocator, size_t len, const uint8_t * data);
+void server_message__free_unpacked(ServerMessage * message, ProtobufCAllocator * allocator);
 /*
  * --- per-message closures --- 
  */

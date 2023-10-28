@@ -24,6 +24,8 @@ add_executable(av src/av.c
         src/routes/info.h
         src/plugins/gstspectaclesink.h
         src/plugins/gstspectaclesink.c
+        src/routes/stream.c
+        src/routes/stream.h
 )
 
 target_link_libraries(av

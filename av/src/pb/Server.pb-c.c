@@ -22,9 +22,7 @@ void server_message__init(ServerMessage *message)
 size_t server_message__get_packed_size(const ServerMessage *message)
 {
 	assert(message->base.descriptor == &server_message__descriptor);
-	return
-	    protobuf_c_message_get_packed_size((const ProtobufCMessage
-						*)(message));
+	return protobuf_c_message_get_packed_size((const ProtobufCMessage *)(message));
 }
 
 size_t server_message__pack(const ServerMessage *message, uint8_t *out)
@@ -33,27 +31,25 @@ size_t server_message__pack(const ServerMessage *message, uint8_t *out)
 	return protobuf_c_message_pack((const ProtobufCMessage *)message, out);
 }
 
-size_t server_message__pack_to_buffer
-    (const ServerMessage * message, ProtobufCBuffer * buffer) {
+size_t server_message__pack_to_buffer(const ServerMessage *message, ProtobufCBuffer *buffer)
+{
 	assert(message->base.descriptor == &server_message__descriptor);
 	return protobuf_c_message_pack_to_buffer((const ProtobufCMessage *)
 						 message, buffer);
 }
 
-ServerMessage *server_message__unpack
-    (ProtobufCAllocator * allocator, size_t len, const uint8_t * data) {
+ServerMessage *server_message__unpack(ProtobufCAllocator *allocator, size_t len, const uint8_t *data)
+{
 	return (ServerMessage *)
-	    protobuf_c_message_unpack(&server_message__descriptor,
-				      allocator, len, data);
+	    protobuf_c_message_unpack(&server_message__descriptor, allocator, len, data);
 }
 
-void server_message__free_unpacked
-    (ServerMessage * message, ProtobufCAllocator * allocator) {
+void server_message__free_unpacked(ServerMessage *message, ProtobufCAllocator *allocator)
+{
 	if (!message)
 		return;
 	assert(message->base.descriptor == &server_message__descriptor);
-	protobuf_c_message_free_unpacked((ProtobufCMessage *) message,
-					 allocator);
+	protobuf_c_message_free_unpacked((ProtobufCMessage *) message, allocator);
 }
 
 static const ProtobufCFieldDescriptor server_message__field_descriptors[2]
@@ -120,8 +116,7 @@ static const ProtobufCIntRange server_message_type__value_ranges[] = {
 	{0, 0}, {0, 2}
 };
 
-static const ProtobufCEnumValueIndex
-    server_message_type__enum_values_by_name[2] = {
+static const ProtobufCEnumValueIndex server_message_type__enum_values_by_name[2] = {
 	{"RELAY", 1},
 	{"SERVER_MESSAGE_UNSPECIFIED", 0},
 };

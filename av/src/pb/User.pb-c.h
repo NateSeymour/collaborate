@@ -25,8 +25,7 @@ typedef struct User User;
 typedef enum _UserSubscriptionType {
 	USER_SUBSCRIPTION_TYPE__USER_SUBSCRIPTION_UNSPECIFIED = 0,
 	USER_SUBSCRIPTION_TYPE__USER_SUBSCRIPTION_FREE = 1,
-	USER_SUBSCRIPTION_TYPE__USER_SUBSCRIPTION_PREMIUM = 2
-	    PROTOBUF_C__FORCE_ENUM_TO_BE_INT_SIZE(USER_SUBSCRIPTION_TYPE)
+	USER_SUBSCRIPTION_TYPE__USER_SUBSCRIPTION_PREMIUM = 2 PROTOBUF_C__FORCE_ENUM_TO_BE_INT_SIZE(USER_SUBSCRIPTION_TYPE)
 } UserSubscriptionType;
 
 /*
@@ -54,8 +53,7 @@ void user__init(User * message);
 size_t user__get_packed_size(const User * message);
 size_t user__pack(const User * message, uint8_t * out);
 size_t user__pack_to_buffer(const User * message, ProtobufCBuffer * buffer);
-User *user__unpack(ProtobufCAllocator * allocator, size_t len,
-		   const uint8_t * data);
+User *user__unpack(ProtobufCAllocator * allocator, size_t len, const uint8_t * data);
 void user__free_unpacked(User * message, ProtobufCAllocator * allocator);
 /*
  * --- per-message closures --- 

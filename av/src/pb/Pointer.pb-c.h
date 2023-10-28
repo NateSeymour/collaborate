@@ -52,25 +52,18 @@ struct PointerCollection {
 void pointer__init(Pointer * message);
 size_t pointer__get_packed_size(const Pointer * message);
 size_t pointer__pack(const Pointer * message, uint8_t * out);
-size_t pointer__pack_to_buffer
-    (const Pointer * message, ProtobufCBuffer * buffer);
-Pointer *pointer__unpack
-    (ProtobufCAllocator * allocator, size_t len, const uint8_t * data);
+size_t pointer__pack_to_buffer(const Pointer * message, ProtobufCBuffer * buffer);
+Pointer *pointer__unpack(ProtobufCAllocator * allocator, size_t len, const uint8_t * data);
 void pointer__free_unpacked(Pointer * message, ProtobufCAllocator * allocator);
 /*
  * PointerCollection methods 
  */
 void pointer_collection__init(PointerCollection * message);
 size_t pointer_collection__get_packed_size(const PointerCollection * message);
-size_t pointer_collection__pack(const PointerCollection * message,
-				uint8_t * out);
-size_t pointer_collection__pack_to_buffer(const PointerCollection *
-					  message, ProtobufCBuffer * buffer);
-PointerCollection *pointer_collection__unpack(ProtobufCAllocator *
-					      allocator, size_t len,
-					      const uint8_t * data);
-void pointer_collection__free_unpacked(PointerCollection * message,
-				       ProtobufCAllocator * allocator);
+size_t pointer_collection__pack(const PointerCollection * message, uint8_t * out);
+size_t pointer_collection__pack_to_buffer(const PointerCollection * message, ProtobufCBuffer * buffer);
+PointerCollection *pointer_collection__unpack(ProtobufCAllocator * allocator, size_t len, const uint8_t * data);
+void pointer_collection__free_unpacked(PointerCollection * message, ProtobufCAllocator * allocator);
 /*
  * --- per-message closures --- 
  */

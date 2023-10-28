@@ -12,11 +12,10 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301,
  * USA. 
  */
-
-#ifndef _GST_SPECTACLESINK_H_
-#define _GST_SPECTACLESINK_H_
+#pragma once
 
 #include <gst/base/gstbasesink.h>
+#include <libsoup/soup.h>
 
 G_BEGIN_DECLS
 #define GST_TYPE_SPECTACLESINK   (gst_spectaclesink_get_type())
@@ -30,6 +29,8 @@ typedef struct _GstSpectaclesinkClass GstSpectaclesinkClass;
 struct _GstSpectaclesink {
 	GstBaseSink base_spectaclesink;
 
+	// private
+	SoupWebsocketConnection *conn;
 };
 
 struct _GstSpectaclesinkClass {
@@ -38,5 +39,6 @@ struct _GstSpectaclesinkClass {
 
 GType gst_spectaclesink_get_type(void);
 
+GST_PLUGIN_STATIC_DECLARE(spectaclesink);
+
 G_END_DECLS
-#endif

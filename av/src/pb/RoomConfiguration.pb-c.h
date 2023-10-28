@@ -50,15 +50,10 @@ struct RoomConfiguration {
  */
 void room_configuration__init(RoomConfiguration * message);
 size_t room_configuration__get_packed_size(const RoomConfiguration * message);
-size_t room_configuration__pack(const RoomConfiguration * message,
-				uint8_t * out);
-size_t room_configuration__pack_to_buffer(const RoomConfiguration *
-					  message, ProtobufCBuffer * buffer);
-RoomConfiguration *room_configuration__unpack(ProtobufCAllocator *
-					      allocator, size_t len,
-					      const uint8_t * data);
-void room_configuration__free_unpacked(RoomConfiguration * message,
-				       ProtobufCAllocator * allocator);
+size_t room_configuration__pack(const RoomConfiguration * message, uint8_t * out);
+size_t room_configuration__pack_to_buffer(const RoomConfiguration * message, ProtobufCBuffer * buffer);
+RoomConfiguration *room_configuration__unpack(ProtobufCAllocator * allocator, size_t len, const uint8_t * data);
+void room_configuration__free_unpacked(RoomConfiguration * message, ProtobufCAllocator * allocator);
 /*
  * --- per-message closures --- 
  */

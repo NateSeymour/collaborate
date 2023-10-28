@@ -22,9 +22,7 @@ void coordinates__init(Coordinates *message)
 size_t coordinates__get_packed_size(const Coordinates *message)
 {
 	assert(message->base.descriptor == &coordinates__descriptor);
-	return
-	    protobuf_c_message_get_packed_size((const ProtobufCMessage
-						*)(message));
+	return protobuf_c_message_get_packed_size((const ProtobufCMessage *)(message));
 }
 
 size_t coordinates__pack(const Coordinates *message, uint8_t *out)
@@ -33,27 +31,25 @@ size_t coordinates__pack(const Coordinates *message, uint8_t *out)
 	return protobuf_c_message_pack((const ProtobufCMessage *)message, out);
 }
 
-size_t coordinates__pack_to_buffer
-    (const Coordinates * message, ProtobufCBuffer * buffer) {
+size_t coordinates__pack_to_buffer(const Coordinates *message, ProtobufCBuffer *buffer)
+{
 	assert(message->base.descriptor == &coordinates__descriptor);
 	return protobuf_c_message_pack_to_buffer((const ProtobufCMessage *)
 						 message, buffer);
 }
 
-Coordinates *coordinates__unpack
-    (ProtobufCAllocator * allocator, size_t len, const uint8_t * data) {
+Coordinates *coordinates__unpack(ProtobufCAllocator *allocator, size_t len, const uint8_t *data)
+{
 	return (Coordinates *)
-	    protobuf_c_message_unpack(&coordinates__descriptor,
-				      allocator, len, data);
+	    protobuf_c_message_unpack(&coordinates__descriptor, allocator, len, data);
 }
 
-void coordinates__free_unpacked
-    (Coordinates * message, ProtobufCAllocator * allocator) {
+void coordinates__free_unpacked(Coordinates *message, ProtobufCAllocator *allocator)
+{
 	if (!message)
 		return;
 	assert(message->base.descriptor == &coordinates__descriptor);
-	protobuf_c_message_free_unpacked((ProtobufCMessage *) message,
-					 allocator);
+	protobuf_c_message_free_unpacked((ProtobufCMessage *) message, allocator);
 }
 
 static const ProtobufCFieldDescriptor coordinates__field_descriptors[2] = {

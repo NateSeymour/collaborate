@@ -22,38 +22,34 @@ void room_configuration__init(RoomConfiguration *message)
 size_t room_configuration__get_packed_size(const RoomConfiguration *message)
 {
 	assert(message->base.descriptor == &room_configuration__descriptor);
-	return
-	    protobuf_c_message_get_packed_size((const ProtobufCMessage
-						*)(message));
+	return protobuf_c_message_get_packed_size((const ProtobufCMessage *)(message));
 }
 
-size_t room_configuration__pack
-    (const RoomConfiguration * message, uint8_t * out) {
+size_t room_configuration__pack(const RoomConfiguration *message, uint8_t *out)
+{
 	assert(message->base.descriptor == &room_configuration__descriptor);
 	return protobuf_c_message_pack((const ProtobufCMessage *)message, out);
 }
 
-size_t room_configuration__pack_to_buffer
-    (const RoomConfiguration * message, ProtobufCBuffer * buffer) {
+size_t room_configuration__pack_to_buffer(const RoomConfiguration *message, ProtobufCBuffer *buffer)
+{
 	assert(message->base.descriptor == &room_configuration__descriptor);
 	return protobuf_c_message_pack_to_buffer((const ProtobufCMessage *)
 						 message, buffer);
 }
 
-RoomConfiguration *room_configuration__unpack
-    (ProtobufCAllocator * allocator, size_t len, const uint8_t * data) {
+RoomConfiguration *room_configuration__unpack(ProtobufCAllocator *allocator, size_t len, const uint8_t *data)
+{
 	return (RoomConfiguration *)
-	    protobuf_c_message_unpack(&room_configuration__descriptor,
-				      allocator, len, data);
+	    protobuf_c_message_unpack(&room_configuration__descriptor, allocator, len, data);
 }
 
-void room_configuration__free_unpacked
-    (RoomConfiguration * message, ProtobufCAllocator * allocator) {
+void room_configuration__free_unpacked(RoomConfiguration *message, ProtobufCAllocator *allocator)
+{
 	if (!message)
 		return;
 	assert(message->base.descriptor == &room_configuration__descriptor);
-	protobuf_c_message_free_unpacked((ProtobufCMessage *) message,
-					 allocator);
+	protobuf_c_message_free_unpacked((ProtobufCMessage *) message, allocator);
 }
 
 static const ProtobufCFieldDescriptor room_configuration__field_descriptors[5]

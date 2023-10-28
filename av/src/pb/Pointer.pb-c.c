@@ -22,9 +22,7 @@ void pointer__init(Pointer *message)
 size_t pointer__get_packed_size(const Pointer *message)
 {
 	assert(message->base.descriptor == &pointer__descriptor);
-	return
-	    protobuf_c_message_get_packed_size((const ProtobufCMessage
-						*)(message));
+	return protobuf_c_message_get_packed_size((const ProtobufCMessage *)(message));
 }
 
 size_t pointer__pack(const Pointer *message, uint8_t *out)
@@ -33,18 +31,17 @@ size_t pointer__pack(const Pointer *message, uint8_t *out)
 	return protobuf_c_message_pack((const ProtobufCMessage *)message, out);
 }
 
-size_t pointer__pack_to_buffer
-    (const Pointer * message, ProtobufCBuffer * buffer) {
+size_t pointer__pack_to_buffer(const Pointer *message, ProtobufCBuffer *buffer)
+{
 	assert(message->base.descriptor == &pointer__descriptor);
 	return protobuf_c_message_pack_to_buffer((const ProtobufCMessage *)
 						 message, buffer);
 }
 
-Pointer *pointer__unpack
-    (ProtobufCAllocator * allocator, size_t len, const uint8_t * data) {
+Pointer *pointer__unpack(ProtobufCAllocator *allocator, size_t len, const uint8_t *data)
+{
 	return (Pointer *)
-	    protobuf_c_message_unpack(&pointer__descriptor, allocator, len,
-				      data);
+	    protobuf_c_message_unpack(&pointer__descriptor, allocator, len, data);
 }
 
 void pointer__free_unpacked(Pointer *message, ProtobufCAllocator *allocator)
@@ -52,8 +49,7 @@ void pointer__free_unpacked(Pointer *message, ProtobufCAllocator *allocator)
 	if (!message)
 		return;
 	assert(message->base.descriptor == &pointer__descriptor);
-	protobuf_c_message_free_unpacked((ProtobufCMessage *) message,
-					 allocator);
+	protobuf_c_message_free_unpacked((ProtobufCMessage *) message, allocator);
 }
 
 void pointer_collection__init(PointerCollection *message)
@@ -65,38 +61,34 @@ void pointer_collection__init(PointerCollection *message)
 size_t pointer_collection__get_packed_size(const PointerCollection *message)
 {
 	assert(message->base.descriptor == &pointer_collection__descriptor);
-	return
-	    protobuf_c_message_get_packed_size((const ProtobufCMessage
-						*)(message));
+	return protobuf_c_message_get_packed_size((const ProtobufCMessage *)(message));
 }
 
-size_t pointer_collection__pack
-    (const PointerCollection * message, uint8_t * out) {
+size_t pointer_collection__pack(const PointerCollection *message, uint8_t *out)
+{
 	assert(message->base.descriptor == &pointer_collection__descriptor);
 	return protobuf_c_message_pack((const ProtobufCMessage *)message, out);
 }
 
-size_t pointer_collection__pack_to_buffer
-    (const PointerCollection * message, ProtobufCBuffer * buffer) {
+size_t pointer_collection__pack_to_buffer(const PointerCollection *message, ProtobufCBuffer *buffer)
+{
 	assert(message->base.descriptor == &pointer_collection__descriptor);
 	return protobuf_c_message_pack_to_buffer((const ProtobufCMessage *)
 						 message, buffer);
 }
 
-PointerCollection *pointer_collection__unpack
-    (ProtobufCAllocator * allocator, size_t len, const uint8_t * data) {
+PointerCollection *pointer_collection__unpack(ProtobufCAllocator *allocator, size_t len, const uint8_t *data)
+{
 	return (PointerCollection *)
-	    protobuf_c_message_unpack(&pointer_collection__descriptor,
-				      allocator, len, data);
+	    protobuf_c_message_unpack(&pointer_collection__descriptor, allocator, len, data);
 }
 
-void pointer_collection__free_unpacked
-    (PointerCollection * message, ProtobufCAllocator * allocator) {
+void pointer_collection__free_unpacked(PointerCollection *message, ProtobufCAllocator *allocator)
+{
 	if (!message)
 		return;
 	assert(message->base.descriptor == &pointer_collection__descriptor);
-	protobuf_c_message_free_unpacked((ProtobufCMessage *) message,
-					 allocator);
+	protobuf_c_message_free_unpacked((ProtobufCMessage *) message, allocator);
 }
 
 static const ProtobufCFieldDescriptor pointer__field_descriptors[2] = {

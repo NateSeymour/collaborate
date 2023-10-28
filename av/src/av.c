@@ -1,9 +1,10 @@
 #include <glib.h>
 #include <libsoup/soup.h>
 #include <gst/gst.h>
-#include <stdio.h>
+#include "plugins/gstspectaclesink.h"
 #include "collaborate_room_manager.h"
 #include "routes/info.h"
+#include "routes/stream.h"
 
 int main(int argc, char *argv[])
 {
@@ -21,21 +22,21 @@ int main(int argc, char *argv[])
 	// Init GStreamer
 	gst_init(NULL, NULL);
 
+	GST_PLUGIN_STATIC_REGISTER(spectaclesink);
+
 	// Create and setup server
 	SoupServer *server = soup_server_new(NULL);
 	if (server == NULL) {
-		printf("Failed to create server!\n");
+		g_error("Failed to create server!\n");
 		return 1;
 	}
 
 	soup_server_add_handler(server, "/info", server_GET_info, NULL, NULL);
-	soup_server_add_handler(server, "/stream",
-				collaborate_room_manager_client_connection_handler,
-				manager, NULL);
+	soup_server_add_handler(server, "/stream", server_GET_stream, manager, NULL);
 
 	res = soup_server_listen_local(server, 5005, NULL, &error);
 	if (!res) {
-		printf("Error: %s\n", error->message);
+		g_error("%s\n", error->message);
 		return 1;
 	}
 	// Run application

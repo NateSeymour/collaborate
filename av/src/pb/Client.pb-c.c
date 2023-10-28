@@ -22,9 +22,7 @@ void client__init(Client *message)
 size_t client__get_packed_size(const Client *message)
 {
 	assert(message->base.descriptor == &client__descriptor);
-	return
-	    protobuf_c_message_get_packed_size((const ProtobufCMessage
-						*)(message));
+	return protobuf_c_message_get_packed_size((const ProtobufCMessage *)(message));
 }
 
 size_t client__pack(const Client *message, uint8_t *out)
@@ -40,11 +38,10 @@ size_t client__pack_to_buffer(const Client *message, ProtobufCBuffer *buffer)
 						 message, buffer);
 }
 
-Client *client__unpack
-    (ProtobufCAllocator * allocator, size_t len, const uint8_t * data) {
+Client *client__unpack(ProtobufCAllocator *allocator, size_t len, const uint8_t *data)
+{
 	return (Client *)
-	    protobuf_c_message_unpack(&client__descriptor, allocator, len,
-				      data);
+	    protobuf_c_message_unpack(&client__descriptor, allocator, len, data);
 }
 
 void client__free_unpacked(Client *message, ProtobufCAllocator *allocator)
@@ -52,8 +49,7 @@ void client__free_unpacked(Client *message, ProtobufCAllocator *allocator)
 	if (!message)
 		return;
 	assert(message->base.descriptor == &client__descriptor);
-	protobuf_c_message_free_unpacked((ProtobufCMessage *) message,
-					 allocator);
+	protobuf_c_message_free_unpacked((ProtobufCMessage *) message, allocator);
 }
 
 void client_chat_message__init(ClientChatMessage *message)
@@ -65,38 +61,34 @@ void client_chat_message__init(ClientChatMessage *message)
 size_t client_chat_message__get_packed_size(const ClientChatMessage *message)
 {
 	assert(message->base.descriptor == &client_chat_message__descriptor);
-	return
-	    protobuf_c_message_get_packed_size((const ProtobufCMessage
-						*)(message));
+	return protobuf_c_message_get_packed_size((const ProtobufCMessage *)(message));
 }
 
-size_t client_chat_message__pack
-    (const ClientChatMessage * message, uint8_t * out) {
+size_t client_chat_message__pack(const ClientChatMessage *message, uint8_t *out)
+{
 	assert(message->base.descriptor == &client_chat_message__descriptor);
 	return protobuf_c_message_pack((const ProtobufCMessage *)message, out);
 }
 
-size_t client_chat_message__pack_to_buffer
-    (const ClientChatMessage * message, ProtobufCBuffer * buffer) {
+size_t client_chat_message__pack_to_buffer(const ClientChatMessage *message, ProtobufCBuffer *buffer)
+{
 	assert(message->base.descriptor == &client_chat_message__descriptor);
 	return protobuf_c_message_pack_to_buffer((const ProtobufCMessage *)
 						 message, buffer);
 }
 
-ClientChatMessage *client_chat_message__unpack
-    (ProtobufCAllocator * allocator, size_t len, const uint8_t * data) {
+ClientChatMessage *client_chat_message__unpack(ProtobufCAllocator *allocator, size_t len, const uint8_t *data)
+{
 	return (ClientChatMessage *)
-	    protobuf_c_message_unpack(&client_chat_message__descriptor,
-				      allocator, len, data);
+	    protobuf_c_message_unpack(&client_chat_message__descriptor, allocator, len, data);
 }
 
-void client_chat_message__free_unpacked
-    (ClientChatMessage * message, ProtobufCAllocator * allocator) {
+void client_chat_message__free_unpacked(ClientChatMessage *message, ProtobufCAllocator *allocator)
+{
 	if (!message)
 		return;
 	assert(message->base.descriptor == &client_chat_message__descriptor);
-	protobuf_c_message_free_unpacked((ProtobufCMessage *) message,
-					 allocator);
+	protobuf_c_message_free_unpacked((ProtobufCMessage *) message, allocator);
 }
 
 void client_message__init(ClientMessage *message)
@@ -108,9 +100,7 @@ void client_message__init(ClientMessage *message)
 size_t client_message__get_packed_size(const ClientMessage *message)
 {
 	assert(message->base.descriptor == &client_message__descriptor);
-	return
-	    protobuf_c_message_get_packed_size((const ProtobufCMessage
-						*)(message));
+	return protobuf_c_message_get_packed_size((const ProtobufCMessage *)(message));
 }
 
 size_t client_message__pack(const ClientMessage *message, uint8_t *out)
@@ -119,27 +109,25 @@ size_t client_message__pack(const ClientMessage *message, uint8_t *out)
 	return protobuf_c_message_pack((const ProtobufCMessage *)message, out);
 }
 
-size_t client_message__pack_to_buffer
-    (const ClientMessage * message, ProtobufCBuffer * buffer) {
+size_t client_message__pack_to_buffer(const ClientMessage *message, ProtobufCBuffer *buffer)
+{
 	assert(message->base.descriptor == &client_message__descriptor);
 	return protobuf_c_message_pack_to_buffer((const ProtobufCMessage *)
 						 message, buffer);
 }
 
-ClientMessage *client_message__unpack
-    (ProtobufCAllocator * allocator, size_t len, const uint8_t * data) {
+ClientMessage *client_message__unpack(ProtobufCAllocator *allocator, size_t len, const uint8_t *data)
+{
 	return (ClientMessage *)
-	    protobuf_c_message_unpack(&client_message__descriptor,
-				      allocator, len, data);
+	    protobuf_c_message_unpack(&client_message__descriptor, allocator, len, data);
 }
 
-void client_message__free_unpacked
-    (ClientMessage * message, ProtobufCAllocator * allocator) {
+void client_message__free_unpacked(ClientMessage *message, ProtobufCAllocator *allocator)
+{
 	if (!message)
 		return;
 	assert(message->base.descriptor == &client_message__descriptor);
-	protobuf_c_message_free_unpacked((ProtobufCMessage *) message,
-					 allocator);
+	protobuf_c_message_free_unpacked((ProtobufCMessage *) message, allocator);
 }
 
 static const ProtobufCFieldDescriptor client__field_descriptors[4] = {
@@ -220,8 +208,7 @@ const ProtobufCMessageDescriptor client__descriptor = {
 	NULL, NULL, NULL	/* reserved[123] */
 };
 
-static const ProtobufCFieldDescriptor
-    client_chat_message__field_descriptors[1] = {
+static const ProtobufCFieldDescriptor client_chat_message__field_descriptors[1] = {
 	{
 	 "text",
 	 2,
@@ -412,8 +399,7 @@ static const ProtobufCIntRange client_message_type__value_ranges[] = {
 	{0, 0}, {0, 4}
 };
 
-static const ProtobufCEnumValueIndex
-    client_message_type__enum_values_by_name[4] = {
+static const ProtobufCEnumValueIndex client_message_type__enum_values_by_name[4] = {
 	{"CHAT_MESSAGE", 3},
 	{"CLIENT_MESSAGE_TYPE_UNSPECIFIED", 0},
 	{"UPDATE_NICKNAME", 1},
