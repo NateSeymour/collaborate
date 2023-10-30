@@ -30,7 +30,7 @@ struct _GstSpectaclesink {
 	GstBaseSink base_spectaclesink;
 
 	// private
-	SoupWebsocketConnection *conn;
+	GList *client_list;
 };
 
 struct _GstSpectaclesinkClass {

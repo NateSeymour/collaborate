@@ -20,14 +20,16 @@ struct _CollaborateRoom {
 
 G_DEFINE_TYPE(CollaborateRoom, collaborate_room, G_TYPE_OBJECT);
 
-static void collaborate_room_class_init(CollaborateRoomClass *klass)
-{
-}
+static void collaborate_room_class_init(CollaborateRoomClass *klass) {}
 
 static void collaborate_room_init(CollaborateRoom *self)
 {
 	gboolean res = FALSE;
 
+    // Create client list
+    self->clients = g_list_alloc();
+
+    // Initialize pipeline
 	self->pipeline = gst_pipeline_new(NULL);
 
 	self->source = gst_element_factory_make("videotestsrc", "source");
@@ -35,20 +37,21 @@ static void collaborate_room_init(CollaborateRoom *self)
 	self->muxxer = gst_element_factory_make("webmmux", "muxxer");
 	self->sink = gst_element_factory_make("spectaclesink", "sink");
 
+    // Initialize spectaclesink
+    g_object_set(self->sink, "client-list", self->clients, NULL);
+
 	if (!self->pipeline || !self->source || !self->encoder || !self->muxxer || !self->sink) {
 		g_error("[Room] Failed to create an element of the pipeline! %p, %p, %p, %p, %p", self->pipeline, self->source, self->encoder,
 			self->muxxer, self->sink);
-		return;
 	}
 
 	gst_bin_add_many(GST_BIN(self->pipeline), self->source, self->encoder, self->muxxer, self->sink, NULL);
 	res = gst_element_link_many(self->source, self->encoder, self->muxxer, self->sink, NULL);
 	if (!res) {
 		g_error("[Room] Failed to create pipeline!");
-		return;
 	}
 
-    //gst_element_set_state(self->pipeline, GST_STATE_PLAYING);
+    gst_element_set_state(self->pipeline, GST_STATE_PLAYING);
 }
 
 static void collaborate_room_dispose(CollaborateRoom *self)
@@ -59,10 +62,15 @@ static void collaborate_room_dispose(CollaborateRoom *self)
 	gst_object_unref(self->source);
 	gst_object_unref(self->pipeline);
 
-	//g_list_free(self->clients);
+	g_list_free_full(self->clients, g_object_unref);
 }
 
 CollaborateRoom *collaborate_room_new(void)
 {
 	return g_object_new(COLLABORATE_TYPE_ROOM, NULL);
+}
+
+void collaborate_room_steal_client(CollaborateRoom *self, CollaborateClient *client)
+{
+    (void)g_list_append(self->clients, client);
 }

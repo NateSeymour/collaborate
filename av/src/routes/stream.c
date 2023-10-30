@@ -5,7 +5,6 @@
 typedef struct {
 	GList *extensions;
 
-	CollaborateClient *client;
 	CollaborateRoom *room;
 } ws_upgrade_request_t;
 
@@ -19,17 +18,13 @@ void complete_ws_upgrade(SoupServerMessage *msg, ws_upgrade_request_t *request)
 								      NULL,
 								      NULL, request->extensions);
 
-    /*
-	for (int i = 0; i < 1000; i++) {
-		soup_websocket_connection_send_text(conn, "Test");
-	}
-     */
+    g_object_unref(stream);
 
-	g_object_unref(stream);
-	g_object_unref(conn);
+    // Create the new client
+    CollaborateClient *client = collaborate_client_new(conn);
+    collaborate_room_steal_client(request->room, client);
 
-	g_object_unref(request->room);
-	g_object_unref(request->client);
+	//g_object_unref(request->room);
 	g_free(request);
 }
 
@@ -51,7 +46,6 @@ void server_GET_stream(SoupServer *server, SoupServerMessage *msg, const char *p
 	// Create upgrade request
 	ws_upgrade_request_t *upgrade_request = g_new(ws_upgrade_request_t, 1);
 	upgrade_request->room = collaborate_room_manager_get_room(room_manager, roomId);
-	upgrade_request->client = collaborate_client_new();
 
 	// Do the websocket handshake
 	res = soup_websocket_server_process_handshake(msg, NULL, NULL, NULL, &upgrade_request->extensions);

@@ -33,6 +33,7 @@
 #include <gst/gst.h>
 #include <gst/base/gstbasesink.h>
 #include "gstspectaclesink.h"
+#include "../collaborate_client.h"
 
 GST_DEBUG_CATEGORY_STATIC(gst_spectaclesink_debug_category);
 #define GST_CAT_DEFAULT gst_spectaclesink_debug_category
@@ -67,7 +68,7 @@ static GstFlowReturn gst_spectaclesink_render_list(GstBaseSink * sink, GstBuffer
 
 enum {
 	PROP_0,
-	PROP_CONN_POINTER,
+	PROP_CLIENT_LIST,
 };
 
 /*
@@ -77,7 +78,9 @@ enum {
 static GstStaticPadTemplate gst_spectaclesink_sink_template = GST_STATIC_PAD_TEMPLATE("sink",
 										      GST_PAD_SINK,
 										      GST_PAD_ALWAYS,
-										      GST_STATIC_CAPS("video/webm" "audio/webm"));
+										      GST_STATIC_CAPS(
+                                                      "video/webm; audio/webm"
+                                              ));
 
 /*
  * class initialization 
@@ -125,12 +128,12 @@ static void gst_spectaclesink_class_init(GstSpectaclesinkClass *klass)
 	base_sink_class->render_list = GST_DEBUG_FUNCPTR(gst_spectaclesink_render_list);
 
 	// Add properties
-	g_object_class_install_property(gobject_class, PROP_CONN_POINTER, g_param_spec_pointer("connection", "Connection", "", G_PARAM_READWRITE));
+	g_object_class_install_property(gobject_class, PROP_CLIENT_LIST, g_param_spec_pointer("client-list", "Client List", "", G_PARAM_READWRITE));
 }
 
 static void gst_spectaclesink_init(GstSpectaclesink *spectaclesink)
 {
-	spectaclesink->conn = NULL;
+	spectaclesink->client_list = NULL;
 }
 
 void gst_spectaclesink_set_property(GObject *object, guint property_id, const GValue *value, GParamSpec *pspec)
@@ -140,13 +143,14 @@ void gst_spectaclesink_set_property(GObject *object, guint property_id, const GV
 	GST_DEBUG_OBJECT(spectaclesink, "set_property");
 
 	switch (property_id) {
-	case PROP_CONN_POINTER:{
-			spectaclesink->conn = g_object_ref(g_value_get_pointer(value));
-			break;
-		}
-	default:
-		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
-		break;
+        case PROP_CLIENT_LIST: {
+            spectaclesink->client_list = g_value_get_pointer(value);
+            break;
+        }
+        default: {
+            G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+            break;
+        }
 	}
 }
 
@@ -156,11 +160,16 @@ void gst_spectaclesink_get_property(GObject *object, guint property_id, GValue *
 
 	GST_DEBUG_OBJECT(spectaclesink, "get_property");
 
-	switch (property_id) {
-	default:
-		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
-		break;
-	}
+    switch (property_id) {
+        case PROP_CLIENT_LIST: {
+            g_value_set_pointer(value, spectaclesink->client_list);
+            break;
+        }
+        default: {
+            G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+            break;
+        }
+    }
 }
 
 void gst_spectaclesink_dispose(GObject *object)
@@ -266,7 +275,11 @@ static gboolean gst_spectaclesink_start(GstBaseSink *sink)
 
 	GST_DEBUG_OBJECT(spectaclesink, "start");
 
-	return TRUE;
+    if(spectaclesink->client_list != NULL) {
+        return TRUE;
+    }
+
+	return FALSE;
 }
 
 static gboolean gst_spectaclesink_stop(GstBaseSink *sink)
@@ -381,11 +394,26 @@ static GstFlowReturn gst_spectaclesink_preroll(GstBaseSink *sink, GstBuffer *buf
 	return GST_FLOW_OK;
 }
 
+void test(gpointer data, gpointer user_data)
+{
+    if(data == NULL) return;
+
+    CollaborateClient *client = COLLABORATE_CLIENT(data);
+
+    SoupWebsocketConnection *conn = collaborate_client_get_connection(client);
+
+    soup_websocket_connection_send_text(conn, "I am rendering!");
+
+    g_object_unref(conn);
+}
+
 static GstFlowReturn gst_spectaclesink_render(GstBaseSink *sink, GstBuffer *buffer)
 {
 	GstSpectaclesink *spectaclesink = GST_SPECTACLESINK(sink);
 
 	GST_DEBUG_OBJECT(spectaclesink, "render");
+
+    g_list_foreach(spectaclesink->client_list, test, NULL);
 
 	return GST_FLOW_OK;
 }
