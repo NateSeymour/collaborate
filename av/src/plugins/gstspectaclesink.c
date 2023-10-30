@@ -195,7 +195,7 @@ static GstCaps *gst_spectaclesink_get_caps(GstBaseSink *sink, GstCaps *filter)
 
 	GST_DEBUG_OBJECT(spectaclesink, "get_caps");
 
-	return NULL;
+    return GST_BASE_SINK_CLASS(gst_spectaclesink_parent_class)->get_caps(sink, filter);
 }
 
 /*
@@ -313,6 +313,13 @@ static gboolean gst_spectaclesink_query(GstBaseSink *sink, GstQuery *query)
 	GstSpectaclesink *spectaclesink = GST_SPECTACLESINK(sink);
 
 	GST_DEBUG_OBJECT(spectaclesink, "query");
+
+    switch(GST_QUERY_TYPE(query))
+    {
+        default: {
+            return GST_BASE_SINK_CLASS(gst_spectaclesink_parent_class)->query(sink, query);
+        }
+    }
 
 	return TRUE;
 }

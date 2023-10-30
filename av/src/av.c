@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 	GMainLoop *main_loop = g_main_loop_new(NULL, FALSE);
 
 	// Init GStreamer
-	gst_init(NULL, NULL);
+	gst_init(&argc, &argv);
 
 	GST_PLUGIN_STATIC_REGISTER(spectaclesink);
 

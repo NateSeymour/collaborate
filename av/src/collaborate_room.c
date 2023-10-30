@@ -47,6 +47,8 @@ static void collaborate_room_init(CollaborateRoom *self)
 		g_error("[Room] Failed to create pipeline!");
 		return;
 	}
+
+    //gst_element_set_state(self->pipeline, GST_STATE_PLAYING);
 }
 
 static void collaborate_room_dispose(CollaborateRoom *self)

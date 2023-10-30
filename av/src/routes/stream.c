@@ -19,9 +19,11 @@ void complete_ws_upgrade(SoupServerMessage *msg, ws_upgrade_request_t *request)
 								      NULL,
 								      NULL, request->extensions);
 
+    /*
 	for (int i = 0; i < 1000; i++) {
 		soup_websocket_connection_send_text(conn, "Test");
 	}
+     */
 
 	g_object_unref(stream);
 	g_object_unref(conn);
