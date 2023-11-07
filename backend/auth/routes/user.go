@@ -40,18 +40,14 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	guestNickname := "Guest"
-	guestUsername := "guest"
-	guestFirstName := "John"
-	guestLastName := "Smith"
 	claims := signing.UserToken{
 		&pb.User{
 			SubscriptionType:  pb.UserSubscriptionType_USER_SUBSCRIPTION_FREE,
 			Id:                util.GenerateSecureId(15),
-			PreferredNickname: &guestNickname,
-			Username:          &guestUsername,
-			FirstName:         &guestFirstName,
-			LastName:          &guestLastName,
+			PreferredNickname: "Guest",
+			Username:          "guest",
+			FirstName:         "John",
+			LastName:          "Smith",
 		},
 		jwt.RegisteredClaims{},
 	}

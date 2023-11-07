@@ -19,3 +19,10 @@ html, body, #app {
     display: flex;
     flex-direction: column;
 }
+
+// Headers
+h1 {
+    font-size: 30px;
+    color: var(--text);
+    font-family: common.$font-title;
+}

@@ -1,4 +1,5 @@
 #include <glib.h>
+#include <libsoup/soup-server.h>
 #include <libsoup/soup.h>
 #include <gst/gst.h>
 #include "plugins/gstspectaclesink.h"

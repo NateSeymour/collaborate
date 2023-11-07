@@ -26,6 +26,7 @@
  * </refsect2>
  */
 
+#include <time.h>
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -394,9 +395,11 @@ static GstFlowReturn gst_spectaclesink_preroll(GstBaseSink *sink, GstBuffer *buf
 	return GST_FLOW_OK;
 }
 
-void test(gpointer data, gpointer user_data)
+void render_to_client(gpointer data, gpointer user_data)
 {
     if(data == NULL) return;
+
+	GstBuffer *buffer = GST_BUFFER(user_data);
 
     CollaborateClient *client = COLLABORATE_CLIENT(data);
 
@@ -413,7 +416,7 @@ static GstFlowReturn gst_spectaclesink_render(GstBaseSink *sink, GstBuffer *buff
 
 	GST_DEBUG_OBJECT(spectaclesink, "render");
 
-    g_list_foreach(spectaclesink->client_list, test, NULL);
+	g_list_foreach(spectaclesink->client_list, render_to_client, buffer);
 
 	return GST_FLOW_OK;
 }

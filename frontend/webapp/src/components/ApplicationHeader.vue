@@ -1,7 +1,7 @@
 <template>
     <header>
         <div class="title">
-            <router-link to="/">Collaborate</router-link>
+            <router-link to="/">Swifteams</router-link>
         </div>
         <div class="actions"></div>
         <div class="user">
