@@ -7,9 +7,16 @@ import (
 )
 
 func SetupRoutes(c *gin.Engine) {
-	auth := c.Group("/api/auth")
+	public := c.Group("/api/auth")
 	{
-		auth.GET("/User", middleware.UserMiddleware, routes.GetUser)
-		auth.POST("/Login", routes.Login)
+		public.POST("/Login", routes.Login)
+		public.POST("/Register", routes.Register)
+		public.POST("/VerifyEmail", routes.VerifyEmail)
+	}
+
+	private := c.Group("/api/auth")
+	private.Use(middleware.UserMiddleware)
+	{
+		private.GET("/User", middleware.UserMiddleware, routes.GetUser)
 	}
 }

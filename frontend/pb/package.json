@@ -1,9 +1,9 @@
 {
-  "name": "pb",
-  "version": "1.0.0",
-  "private": true,
-  "license": "ISC",
-  "dependencies": {
-    "ts-proto": "^1.160.0"
-  }
+    "name": "pb",
+    "version": "1.0.0",
+    "private": true,
+    "license": "ISC",
+    "dependencies": {
+        "ts-proto": "^1.160.0"
+    }
 }

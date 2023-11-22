@@ -13,8 +13,9 @@ import (
 )
 
 type CreateRoomRequest struct {
-	Name             string   `json:"name" binding:"required"`
-	RequestedPlugins []string `json:"requestedPlugins" binding:"required"`
+	Name               string   `json:"name" binding:"required"`
+	OfficialPlugins    []string `json:"officialPlugins" binding:"required"`
+	DevelopmentPlugins []string `json:"developmentPlugins" binding:"required"`
 }
 
 func CreateRoom(c *gin.Context) {
@@ -31,7 +32,7 @@ func CreateRoom(c *gin.Context) {
 		Type:    pb.RoomType_STANDARD,
 		Id:      util.GenerateSecureId(20),
 		Expiry:  uint64(time.Now().Add(24 * time.Hour).Unix()),
-		Plugins: body.RequestedPlugins,
+		Plugins: body.OfficialPlugins,
 	}
 
 	// Create Owner token

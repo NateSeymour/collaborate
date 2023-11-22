@@ -1,55 +1,60 @@
 <template>
-    <header>
+    <header class="application-header">
         <div class="title">
-            <router-link to="/">Swifteams</router-link>
+            <router-link to="/Welcome">Swifteams</router-link>
         </div>
-        <div class="actions"></div>
-        <div class="user">
-            <div v-if="userStore.loggedIn" class="user-info">
-                <span>{{ userStore.user.username }}</span>
-            </div>
-            <div v-else class="login-box">
-                Login
-            </div>
+
+        <div v-if="user.data.value" class="user">
+            {{ user.data.value.email }}
+        </div>
+        <div v-else class="actions">
+            <Button @click="router.push('/Login')" visual-placement="background">Login</Button>
+            <Button @click="router.push('/Register')" visual-placement="foreground">Register</Button>
         </div>
     </header>
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from '@/store/user';
+import Button from '@/components/form/Button.vue';
+import { useRouter } from 'vue-router';
+import {buildQuery} from "@/api/api";
+import { User } from 'pb/User.ts';
 
-const userStore = useUserStore();
+const router = useRouter();
+
+const user = buildQuery<User>('/auth/User', {
+    queryKey: ['auth', 'user'],
+});
 </script>
 
 <style scoped lang="scss">
 @use "@/style/common";
 
 header {
-    width: 100%;
-    height: 3em;
+    @include common.size(100%, 3em);
     padding: 2em;
-    background: common.$highlight-color;
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
 
     .title {
         a {
-            color: white;
-            font-size: 30px;
-            font-family: common.$font-title;
-            font-weight: 600;
+            color: var(--text);
+            font: 600 30px common.$font-title;
             text-decoration: none;
         }
     }
 
-    .actions {
-        flex-grow: 1000;
+    .user {
+        color: var(--text);
+        font: 400 14px common.$font-title;
     }
 
-    .user {
-        font-family: common.$font-title;
-        color: white;
+    .actions {
+        display: grid;
+        grid-column-gap: 1em;
+        grid-template-columns: 1fr 1fr;
     }
 }
 </style>

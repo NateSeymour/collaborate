@@ -16,6 +16,11 @@ $font-title: 'Work Sans', sans-serif;
     @include size(100%, 100%);
 }
 
+@mixin centered-content {
+    display: grid;
+    place-items: center;
+}
+
 @mixin hover-highlight {
     cursor: pointer;
     transition: background-color 200ms;
@@ -27,20 +32,4 @@ $font-title: 'Work Sans', sans-serif;
     &[data-selected=true] {
         background-color: $accent-color;
     }
-}
-
-// COMPONENTS
-@mixin button {
-    $height: 3em;
-    @include size(10em, $height);
-    line-height: $height;
-    font-size: 20px;
-    color: white;
-    font-family: $font-title;
-    font-weight: 600;
-    background: $accent-color;
-    border: none;
-    cursor: pointer;
-    text-decoration: none;
-    text-align: center;
 }

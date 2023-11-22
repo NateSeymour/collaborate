@@ -1,0 +1,20 @@
+{
+    "manifest_version": 1,
+    "plugin": {
+        "name": "@official/chat",
+        "description": "Simple chat plugin.",
+        "version": "0.0.0",
+        "dependencies": []
+    },
+    "store": {
+        "message": {
+            "storeType": "Array",
+            "dataType": "Object",
+            "persistence": "preferred",
+            "accessPolicy": "producer",
+            "members": {
+                "content": "string"
+            }
+        }
+    }
+}

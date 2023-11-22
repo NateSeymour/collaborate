@@ -4,6 +4,10 @@
     "webapp",
     "pb",
     "av-dbg",
-    "spectacle"
+    "spectacle",
+    "realtime",
+
+    "plugins/template",
+    "plugins/@official/chat"
   ]
 }

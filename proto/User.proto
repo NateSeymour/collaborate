@@ -9,11 +9,10 @@ enum UserSubscriptionType {
 
 message User {
     UserSubscriptionType subscriptionType = 1;
-    string id = 5;
+    uint64 id = 5;
 
     string preferredNickname = 2;
     string email = 3;
-    string username = 4;
     string firstName = 6;
     string lastName = 7;
 }

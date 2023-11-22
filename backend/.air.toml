@@ -1,13 +1,13 @@
 root = "."
 testdata_dir = "testdata"
-tmp_dir = "dev-build"
+tmp_dir = ".build"
 
 [build]
   args_bin = []
-  bin = "./dev-build/main"
-  cmd = "go build -o ./dev-build/main ."
+  bin = "./.build/main"
+  cmd = "go build -o ./.build/main ."
   delay = 1000
-  exclude_dir = ["assets", "dev-build", "vendor", "testdata"]
+  exclude_dir = ["assets", ".build", "vendor", "testdata"]
   exclude_file = []
   exclude_regex = ["_test.go"]
   exclude_unchanged = false
@@ -25,7 +25,7 @@ tmp_dir = "dev-build"
   rerun = false
   rerun_delay = 500
   send_interrupt = false
-  stop_on_error = false
+  stop_on_error = true
 
 [color]
   app = ""

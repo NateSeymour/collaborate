@@ -1,4 +1,5 @@
 /* eslint-disable */
+import Long from "long";
 import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "";
@@ -44,16 +45,15 @@ export function userSubscriptionTypeToJSON(object: UserSubscriptionType): string
 
 export interface User {
   subscriptionType: UserSubscriptionType;
-  id: string;
+  id: number;
   preferredNickname: string;
   email: string;
-  username: string;
   firstName: string;
   lastName: string;
 }
 
 function createBaseUser(): User {
-  return { subscriptionType: 0, id: "", preferredNickname: "", email: "", username: "", firstName: "", lastName: "" };
+  return { subscriptionType: 0, id: 0, preferredNickname: "", email: "", firstName: "", lastName: "" };
 }
 
 export const User = {
@@ -61,17 +61,14 @@ export const User = {
     if (message.subscriptionType !== 0) {
       writer.uint32(8).int32(message.subscriptionType);
     }
-    if (message.id !== "") {
-      writer.uint32(42).string(message.id);
+    if (message.id !== 0) {
+      writer.uint32(40).uint64(message.id);
     }
     if (message.preferredNickname !== "") {
       writer.uint32(18).string(message.preferredNickname);
     }
     if (message.email !== "") {
       writer.uint32(26).string(message.email);
-    }
-    if (message.username !== "") {
-      writer.uint32(34).string(message.username);
     }
     if (message.firstName !== "") {
       writer.uint32(50).string(message.firstName);
@@ -97,11 +94,11 @@ export const User = {
           message.subscriptionType = reader.int32() as any;
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
             break;
           }
 
-          message.id = reader.string();
+          message.id = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
           if (tag !== 18) {
@@ -116,13 +113,6 @@ export const User = {
           }
 
           message.email = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.username = reader.string();
           continue;
         case 6:
           if (tag !== 50) {
@@ -150,10 +140,9 @@ export const User = {
   fromJSON(object: any): User {
     return {
       subscriptionType: isSet(object.subscriptionType) ? userSubscriptionTypeFromJSON(object.subscriptionType) : 0,
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
       preferredNickname: isSet(object.preferredNickname) ? globalThis.String(object.preferredNickname) : "",
       email: isSet(object.email) ? globalThis.String(object.email) : "",
-      username: isSet(object.username) ? globalThis.String(object.username) : "",
       firstName: isSet(object.firstName) ? globalThis.String(object.firstName) : "",
       lastName: isSet(object.lastName) ? globalThis.String(object.lastName) : "",
     };
@@ -164,17 +153,14 @@ export const User = {
     if (message.subscriptionType !== 0) {
       obj.subscriptionType = userSubscriptionTypeToJSON(message.subscriptionType);
     }
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.id !== 0) {
+      obj.id = Math.round(message.id);
     }
     if (message.preferredNickname !== "") {
       obj.preferredNickname = message.preferredNickname;
     }
     if (message.email !== "") {
       obj.email = message.email;
-    }
-    if (message.username !== "") {
-      obj.username = message.username;
     }
     if (message.firstName !== "") {
       obj.firstName = message.firstName;
@@ -191,10 +177,9 @@ export const User = {
   fromPartial<I extends Exact<DeepPartial<User>, I>>(object: I): User {
     const message = createBaseUser();
     message.subscriptionType = object.subscriptionType ?? 0;
-    message.id = object.id ?? "";
+    message.id = object.id ?? 0;
     message.preferredNickname = object.preferredNickname ?? "";
     message.email = object.email ?? "";
-    message.username = object.username ?? "";
     message.firstName = object.firstName ?? "";
     message.lastName = object.lastName ?? "";
     return message;
@@ -212,6 +197,18 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+
+function longToNumber(long: Long): number {
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  }
+  return long.toNumber();
+}
+
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
+}
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

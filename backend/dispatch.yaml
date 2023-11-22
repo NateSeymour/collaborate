@@ -1,5 +1,0 @@
-dispatch:
-  - url: "*/api/realtime/*"
-    service: default
-  - url: "*/api/broker/*"
-    service: broker

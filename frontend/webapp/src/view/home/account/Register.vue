@@ -1,0 +1,107 @@
+<template>
+    <div class="register">
+        <div class="register-box">
+            <h1>Create Account</h1>
+
+            <div class="sso">
+                <button class="sso-button">
+                    <img src="../../../assets/logos/google.png" />
+                </button>
+
+                <button class="sso-button">
+                    <img src="../../../assets/logos/github.png" />
+                </button>
+            </div>
+
+            <div class="traditional" @input="formHandler">
+                <Textbox name="Email" hint="email@example.com" />
+                <Textbox name="Password" type="password" hint="password123" />
+
+                <div class="actions">
+                    <Button @click="register.mutate({
+                        email: form['Email'],
+                        password: form['Password'],
+                    })" visual-placement="foreground">Register</Button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script setup lang="ts">
+import Button from '@/components/form/Button.vue';
+import Textbox from '@/components/form/TextBox.vue';
+import { useForm } from '@/util/form';
+import { useRouter } from 'vue-router';
+import {buildMutation} from "@/api/api";
+
+const router = useRouter();
+
+const [form, formHandler] = useForm();
+
+const register = buildMutation<{email: string, password: string}>('/auth/Register', {
+    cacheKey: ['auth', 'user'],
+    onSuccess: () => {
+        router.push('/RegistrationStaging');
+    }
+});
+</script>
+
+<style lang="scss" scoped>
+@use "@/style/common";
+
+.register {
+    @include common.fullsize;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .register-box {
+        width: 30em;
+        max-width: 80%;
+        border: 1px solid var(--text);
+        padding: 2em;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        h1 {
+            text-align: center;
+        }
+
+        .sso {
+            border-bottom: 1px solid var(--text);
+            color: var(--text);
+            padding: 1em;
+            margin: 0.5em 0 2em 0;
+            display: grid;
+            grid-column-gap: 0.5em;
+            grid-template-columns: 1fr 1fr;
+
+            .sso-button {
+                @include common.size(4em, 4em);
+                padding: 0.4em;
+                cursor: pointer;
+
+                img {
+                    max-width: 100%;
+                    max-height: 100%;
+                }
+            }
+        }
+
+        .traditional {
+            display: grid;
+            grid-row-gap: 2em;
+            width: 100%;
+
+            .actions {
+                button {
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
+</style>

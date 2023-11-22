@@ -14,3 +14,8 @@ type RoomCreationToken struct {
 	*pb.RoomConfiguration
 	jwt.RegisteredClaims
 }
+
+type EmailVerificationToken struct {
+	EmailAddress string
+	jwt.RegisteredClaims
+}

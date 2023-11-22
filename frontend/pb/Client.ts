@@ -1,4 +1,5 @@
 /* eslint-disable */
+import Long from "long";
 import _m0 from "protobufjs/minimal";
 import { PointerCollection } from "./Pointer";
 import { Timestamp } from "./google/protobuf/timestamp";
@@ -107,7 +108,7 @@ export interface ClientChatMessage {
 }
 
 export interface ClientMessage {
-  userId: string;
+  userId: number;
   type: ClientMessageType;
   timestamp: Date | undefined;
   nickname?: string | undefined;
@@ -279,20 +280,13 @@ export const ClientChatMessage = {
 };
 
 function createBaseClientMessage(): ClientMessage {
-  return {
-    userId: "",
-    type: 0,
-    timestamp: undefined,
-    nickname: undefined,
-    pointers: undefined,
-    chatMessage: undefined,
-  };
+  return { userId: 0, type: 0, timestamp: undefined, nickname: undefined, pointers: undefined, chatMessage: undefined };
 }
 
 export const ClientMessage = {
   encode(message: ClientMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.userId !== "") {
-      writer.uint32(10).string(message.userId);
+    if (message.userId !== 0) {
+      writer.uint32(8).uint64(message.userId);
     }
     if (message.type !== 0) {
       writer.uint32(16).int32(message.type);
@@ -320,11 +314,11 @@ export const ClientMessage = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.userId = reader.string();
+          message.userId = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
           if (tag !== 16) {
@@ -372,7 +366,7 @@ export const ClientMessage = {
 
   fromJSON(object: any): ClientMessage {
     return {
-      userId: isSet(object.userId) ? globalThis.String(object.userId) : "",
+      userId: isSet(object.userId) ? globalThis.Number(object.userId) : 0,
       type: isSet(object.type) ? clientMessageTypeFromJSON(object.type) : 0,
       timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
       nickname: isSet(object.nickname) ? globalThis.String(object.nickname) : undefined,
@@ -383,8 +377,8 @@ export const ClientMessage = {
 
   toJSON(message: ClientMessage): unknown {
     const obj: any = {};
-    if (message.userId !== "") {
-      obj.userId = message.userId;
+    if (message.userId !== 0) {
+      obj.userId = Math.round(message.userId);
     }
     if (message.type !== 0) {
       obj.type = clientMessageTypeToJSON(message.type);
@@ -409,7 +403,7 @@ export const ClientMessage = {
   },
   fromPartial<I extends Exact<DeepPartial<ClientMessage>, I>>(object: I): ClientMessage {
     const message = createBaseClientMessage();
-    message.userId = object.userId ?? "";
+    message.userId = object.userId ?? 0;
     message.type = object.type ?? 0;
     message.timestamp = object.timestamp ?? undefined;
     message.nickname = object.nickname ?? undefined;
@@ -455,6 +449,18 @@ function fromJsonTimestamp(o: any): Date {
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));
   }
+}
+
+function longToNumber(long: Long): number {
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  }
+  return long.toNumber();
+}
+
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
 
 function isSet(value: any): boolean {

@@ -1,8 +1,6 @@
 interface CollaborationConfig {
     api: {
-        broker: string,
-        auth: string,
-        realtime: string,
+        base: string,
     },
     roomTemplates: {
         name: string,
@@ -13,17 +11,13 @@ interface CollaborationConfig {
 
 const production = {
     api: {
-        broker: 'https://collaborate.notyoursoftware.com/api/broker',
-        auth: 'https://collaborate.notyoursoftware.com/api/auth',
-        realtime: 'wss://collaborate.notyoursoftware.com/api/realtime',
+        base: 'https://swifteams.com/api',
     },
 };
 
 const development = {
     api: {
-        broker: 'http://localhost:8080/api/broker',
-        auth: 'http://localhost:8080/api/auth',
-        realtime: 'ws://localhost:8080/api/realtime',
+        base: 'https://localhost:8080/api',
     },
 };
 
