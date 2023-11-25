@@ -17,7 +17,7 @@ const production = {
 
 const development = {
     api: {
-        base: 'https://localhost:8080/api',
+        base: 'https://localhost/api',
     },
 };
 

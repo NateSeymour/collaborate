@@ -1,0 +1,48 @@
+syntax = "proto3";
+option go_package = "./pb";
+
+/* STORE */
+enum StoreMemberType {
+    MEMBER_UNSPECIFIED = 0;
+    STRING = 1;
+    NUMBER = 2;
+    BOOLEAN = 5;
+
+    TIMESTAMP = 6;
+    COORDINATE = 3;
+    USER = 4;
+}
+
+enum StoreAccessType {
+    ACCESS_UNSPECIFIED = 0;
+    PUBLIC = 1;
+    PRODUCER = 2;
+    HOST = 3;
+}
+
+enum StorePersistenceType {
+    PERSISTENCE_UNSPECIFIED = 0;
+    NONE = 1;
+    PREFERRED = 2;
+    REQUIRED = 3;
+}
+
+/* PLUGINS */
+message PluginDefinition {
+    string name = 1;
+    string description = 2;
+    string version = 3;
+
+    repeated string dependencies = 4;
+}
+
+message PluginStoreDefinition {
+    map<string, StoreMemberType> members = 1;
+}
+
+message PluginManifest {
+    uint32 manifest_version = 1;
+
+    PluginDefinition plugin = 2;
+    map<string, PluginStoreDefinition> store = 3;
+}
