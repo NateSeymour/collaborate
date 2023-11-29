@@ -5,23 +5,20 @@
 
             <div class="sso">
                 <button class="sso-button">
-                    <img src="../../../assets/logos/google.png" />
+                    <img src="@/assets/logos/google.png" />
                 </button>
 
                 <button class="sso-button">
-                    <img src="../../../assets/logos/github.png" />
+                    <img src="@/assets/logos/github.png" />
                 </button>
             </div>
 
             <div class="traditional" @input="formHandler">
-                <Textbox name="Email" hint="email@example.com" />
-                <Textbox name="Password" type="password" hint="password123" />
+                <TextBox name="email" hint="email@example.com" />
+                <TextBox name="password" type="password" hint="password123" />
 
                 <div class="actions">
-                    <Button @click="register.mutate({
-                        email: form['Email'],
-                        password: form['Password'],
-                    })" visual-placement="foreground">Register</Button>
+                    <Button :action="register" visual-placement="foreground">Register</Button>
                 </div>
             </div>
         </div>
@@ -30,17 +27,19 @@
 
 <script setup lang="ts">
 import Button from '@/components/form/Button.vue';
-import Textbox from '@/components/form/TextBox.vue';
+import TextBox from '@/components/form/TextBox.vue';
 import { useForm } from '@/util/form';
 import { useRouter } from 'vue-router';
 import {buildMutation} from "@/api/api";
+import {RegisterRequest} from "@/api/auth";
 
 const router = useRouter();
 
 const [form, formHandler] = useForm();
 
-const register = buildMutation<{email: string, password: string}>('/auth/Register', {
+const register = buildMutation<RegisterRequest, void>('/auth/Register', {
     cacheKey: ['auth', 'user'],
+    body: form,
     onSuccess: () => {
         router.push('/RegistrationStaging');
     }

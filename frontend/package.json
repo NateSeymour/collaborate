@@ -6,8 +6,6 @@
     "av-dbg",
     "spectacle",
     "realtime",
-
-    "plugins/template",
-    "plugins/@official/chat"
+    "plugin"
   ]
 }

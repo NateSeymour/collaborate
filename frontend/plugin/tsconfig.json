@@ -21,7 +21,7 @@
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true,
-        "baseUrl": ".",
+        "baseUrl": "./src/@official/chat",
         "paths": {
             "@/*": ["./src/*"],
             "@public/*": ["./public/*"]

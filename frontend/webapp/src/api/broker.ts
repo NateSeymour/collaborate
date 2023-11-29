@@ -1,9 +1,9 @@
-import { RoomConfiguration } from 'pb/RoomConfiguration.ts';
+import { RoomConfiguration } from 'pb/Swifteams.ts';
 
 // /broker/CreateRoom
 export interface CreateRoomRequest {
     name: string,
-    officialPlugins: string[],
+    marketplacePlugins: string[],
     developmentPlugins: string[],
 }
 

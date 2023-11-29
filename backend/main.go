@@ -7,6 +7,7 @@ import (
 	"github.com/NateSeymour/collaborate/backend/comms"
 	"github.com/NateSeymour/collaborate/backend/config"
 	"github.com/NateSeymour/collaborate/backend/db"
+	"github.com/NateSeymour/collaborate/backend/debug"
 	"github.com/NateSeymour/collaborate/backend/realtime"
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -41,6 +42,11 @@ func main() {
 
 	// Setup HTTP server
 	router := gin.Default()
+
+	if config.ApplicationRuntimeConfig.Mode == config.CONFIG_MODE_DEVELOPMENT {
+		log.Print("[Main] Enabling debug service...")
+		debug.SetupRoutes(router)
+	}
 
 	if config.ApplicationRuntimeConfig.EnabledServices["realtime"] {
 		log.Print("[Main] Enabling realtime service...")

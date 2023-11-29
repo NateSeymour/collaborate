@@ -1,6 +1,19 @@
 syntax = "proto3";
 option go_package = "./pb";
 
+/* COMMON TYPES */
+enum PointerType {
+    POINTER_TYPE_UNSPECIFIED = 0;
+    POINTER_TYPE_POINTER = 1;
+    POINTER_TYPE_CURSOR = 2;
+    POINTER_TYPE_TOUCH = 3;
+}
+
+message Coordinates {
+    double x = 1;
+    double y = 2;
+}
+
 /* STORE */
 enum StoreMemberType {
     MEMBER_UNSPECIFIED = 0;
@@ -45,4 +58,110 @@ message PluginManifest {
 
     PluginDefinition plugin = 2;
     map<string, PluginStoreDefinition> store = 3;
+}
+
+/* USER */
+enum UserSubscriptionType {
+    USER_SUBSCRIPTION_UNSPECIFIED = 0;
+    USER_SUBSCRIPTION_FREE = 1;
+    USER_SUBSCRIPTION_PREMIUM = 2;
+}
+
+message User {
+    UserSubscriptionType subscriptionType = 1;
+    uint64 id = 5;
+
+    string preferredNickname = 2;
+    string email = 3;
+    string firstName = 6;
+    string lastName = 7;
+}
+
+/* POINTER */
+message Pointer {
+    PointerType pointerType = 1;
+    Coordinates coordinates = 2;
+}
+
+message PointerCollection {
+    repeated Pointer pointers = 1;
+}
+
+/* CLIENT */
+import "google/protobuf/timestamp.proto";
+
+enum ClientRole {
+    CLIENT_ROLE_UNSPECIFIED = 0;
+    GUEST = 1;
+    ROOM_OWNER = 2;
+    SERVER_ADMIN = 3;
+}
+
+message Client {
+    string userId = 1;
+    ClientRole role = 4;
+
+    string nickname = 2;
+    PointerCollection pointers = 3;
+}
+
+enum ClientMessageType {
+    CLIENT_MESSAGE_TYPE_UNSPECIFIED = 0;
+    UPDATE_NICKNAME = 1;
+    UPDATE_POINTERS = 2;
+    CHAT_MESSAGE = 3;
+}
+
+message ClientChatMessage {
+    string text = 2;
+}
+
+message ClientMessage {
+    uint64 userId = 1;
+    ClientMessageType type = 2;
+    google.protobuf.Timestamp timestamp = 6;
+    oneof data {
+        string nickname = 3;
+        PointerCollection pointers = 4;
+        ClientChatMessage chatMessage = 5;
+    }
+}
+
+/* CONNECTION */
+enum CloseCode {
+    CLOSE_CODE_UNSPECIFIED = 0;
+    CLOSE_CODE_NORMAL = 1006;
+    CLOSE_CODE_UNAUTHORIZED = 4401;
+    CLOSE_CODE_NOTFOUND = 4404;
+    CLOSE_CODE_CLIENT_USER_REQUESTED = 4100;
+    CLOSE_CODE_ROOM_EXPIRED = 4001;
+}
+
+/* SERVER */
+enum ServerMessageType {
+    SERVER_MESSAGE_UNSPECIFIED = 0;
+    RELAY = 1;
+}
+
+message ServerMessage {
+    ServerMessageType type = 1;
+
+    oneof message {
+        ClientMessage relay = 2;
+    }
+}
+
+/* ROOM */
+enum RoomType {
+    ROOM_TYPE_UNSPECIFIED = 0;
+    STANDARD = 1;
+    FREE = 2;
+}
+
+message RoomConfiguration {
+    RoomType type = 3;
+    string id = 1;
+    string name = 5;
+    uint64 expiry = 2;
+    repeated string plugins = 4;
 }

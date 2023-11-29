@@ -1,12 +1,10 @@
-import Chat from '@/activities/Chat.vue';
-import manifest from '@public/manifest.json';
+import Chat from './activities/Chat.vue';
 
 interface Message {
     content: string,
 }
 
 export const plugin = {
-    manifest,
     activities: [
         {
             name: 'chat',

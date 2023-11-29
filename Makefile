@@ -1,10 +1,4 @@
-PB_SOURCES=Client.proto \
-	CommonTypes.proto  \
-	Connection.proto \
-	Pointer.proto \
-	RoomConfiguration.proto \
-	Server.proto \
-	User.proto
+PB_SOURCES=Swifteams.proto
 
 OUT_DIR=./bin
 

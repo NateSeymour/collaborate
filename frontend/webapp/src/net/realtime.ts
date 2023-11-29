@@ -1,8 +1,6 @@
 import { onBeforeUnmount, onMounted } from 'vue';
 import { config } from '@/config';
-import { ClientMessage, ClientMessageType } from 'pb/Client';
-import { CloseCode } from 'pb/Connection';
-import { ServerMessage, ServerMessageType } from 'pb/Server';
+import { CloseCode, ClientMessage, ClientMessageType, ServerMessage, ServerMessageType } from 'pb/Swifteams.ts';
 import mitt from 'mitt';
 
 export type RoomState = 'connecting' | 'open' | 'closed';

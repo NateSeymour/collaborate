@@ -27,7 +27,7 @@ const router = useRouter();
 const startCollaborating = buildMutation<CreateRoomRequest, CreateRoomResponse>('/broker/CreateRoom', {
     body: {
         name: 'New Room',
-        officialPlugins: [],
+        marketplacePlugins: [],
         developmentPlugins: ['@official/chat'],
     },
     onSuccess: (room) => {

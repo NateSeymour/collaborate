@@ -24,6 +24,10 @@ const props = defineProps<{
         color: var(--text);
         font-family: common.$font-title;
         margin-bottom: 0.5em;
+
+        &::first-letter {
+            text-transform: capitalize;
+        }
     }
 
     input {
