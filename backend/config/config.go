@@ -14,14 +14,15 @@ const (
 )
 
 type RuntimeConfig struct {
-	Hostname           string
-	Port               string
-	QualifiedHost      string
-	Mode               RuntimeMode
-	EnabledServices    map[string]bool
-	DbConnectionString string
-	MailgunApiKey      string
-	MailgunDomain      string
+	Hostname              string
+	Port                  string
+	QualifiedHost         string
+	Mode                  RuntimeMode
+	EnabledServices       map[string]bool
+	DbConnectionString    string
+	MailgunApiKey         string
+	MailgunDomain         string
+	DevelopmentPluginsDir string
 }
 
 var ApplicationRuntimeConfig RuntimeConfig
@@ -29,7 +30,7 @@ var ApplicationRuntimeConfig RuntimeConfig
 func ParseApplicationRuntimeConfig() error {
 	ApplicationRuntimeConfig.EnabledServices = make(map[string]bool)
 
-	hostname, hasHostname := os.LookupEnv("SWIFTEAMS_HOST")
+	hostname, hasHostname := os.LookupEnv("SWIFTEAMS_HOSTNAME")
 	if hasHostname {
 		ApplicationRuntimeConfig.Hostname = hostname
 	} else {
@@ -83,6 +84,11 @@ func ParseApplicationRuntimeConfig() error {
 		ApplicationRuntimeConfig.MailgunDomain = mgDomain
 	} else {
 		return errors.New("the configuration does not specify a mailgun domain")
+	}
+
+	devPluginDir, hasDevPluginDir := os.LookupEnv("DEV_PLUGIN_DIR")
+	if hasDevPluginDir {
+		ApplicationRuntimeConfig.DevelopmentPluginsDir = devPluginDir
 	}
 
 	return nil

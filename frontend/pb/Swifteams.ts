@@ -6,6 +6,33 @@ import { Timestamp } from "./google/protobuf/timestamp";
 export const protobufPackage = "";
 
 /** COMMON TYPES */
+export enum Value {
+  UNSPECIFIED = 0,
+  UNRECOGNIZED = -1,
+}
+
+export function valueFromJSON(object: any): Value {
+  switch (object) {
+    case 0:
+    case "UNSPECIFIED":
+      return Value.UNSPECIFIED;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return Value.UNRECOGNIZED;
+  }
+}
+
+export function valueToJSON(object: Value): string {
+  switch (object) {
+    case Value.UNSPECIFIED:
+      return "UNSPECIFIED";
+    case Value.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
 export enum PointerType {
   POINTER_TYPE_UNSPECIFIED = 0,
   POINTER_TYPE_POINTER = 1,
@@ -240,6 +267,45 @@ export function userSubscriptionTypeToJSON(object: UserSubscriptionType): string
     case UserSubscriptionType.USER_SUBSCRIPTION_PREMIUM:
       return "USER_SUBSCRIPTION_PREMIUM";
     case UserSubscriptionType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+export enum UserPrivilege {
+  USER_PRIVILEGE_UNSPECIFIED = 0,
+  PRIVILEGE_STANDARD = 1,
+  PRIVILEGE_SUPERUSER = 2,
+  UNRECOGNIZED = -1,
+}
+
+export function userPrivilegeFromJSON(object: any): UserPrivilege {
+  switch (object) {
+    case 0:
+    case "USER_PRIVILEGE_UNSPECIFIED":
+      return UserPrivilege.USER_PRIVILEGE_UNSPECIFIED;
+    case 1:
+    case "PRIVILEGE_STANDARD":
+      return UserPrivilege.PRIVILEGE_STANDARD;
+    case 2:
+    case "PRIVILEGE_SUPERUSER":
+      return UserPrivilege.PRIVILEGE_SUPERUSER;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return UserPrivilege.UNRECOGNIZED;
+  }
+}
+
+export function userPrivilegeToJSON(object: UserPrivilege): string {
+  switch (object) {
+    case UserPrivilege.USER_PRIVILEGE_UNSPECIFIED:
+      return "USER_PRIVILEGE_UNSPECIFIED";
+    case UserPrivilege.PRIVILEGE_STANDARD:
+      return "PRIVILEGE_STANDARD";
+    case UserPrivilege.PRIVILEGE_SUPERUSER:
+      return "PRIVILEGE_SUPERUSER";
+    case UserPrivilege.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
   }
@@ -507,6 +573,7 @@ export interface User {
   email: string;
   firstName: string;
   lastName: string;
+  privilege: string;
 }
 
 /** POINTER */
@@ -1081,7 +1148,7 @@ export const PluginManifest_StoreEntry = {
 };
 
 function createBaseUser(): User {
-  return { subscriptionType: 0, id: 0, preferredNickname: "", email: "", firstName: "", lastName: "" };
+  return { subscriptionType: 0, id: 0, preferredNickname: "", email: "", firstName: "", lastName: "", privilege: "" };
 }
 
 export const User = {
@@ -1103,6 +1170,9 @@ export const User = {
     }
     if (message.lastName !== "") {
       writer.uint32(58).string(message.lastName);
+    }
+    if (message.privilege !== "") {
+      writer.uint32(66).string(message.privilege);
     }
     return writer;
   },
@@ -1156,6 +1226,13 @@ export const User = {
 
           message.lastName = reader.string();
           continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.privilege = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1173,6 +1250,7 @@ export const User = {
       email: isSet(object.email) ? globalThis.String(object.email) : "",
       firstName: isSet(object.firstName) ? globalThis.String(object.firstName) : "",
       lastName: isSet(object.lastName) ? globalThis.String(object.lastName) : "",
+      privilege: isSet(object.privilege) ? globalThis.String(object.privilege) : "",
     };
   },
 
@@ -1196,6 +1274,9 @@ export const User = {
     if (message.lastName !== "") {
       obj.lastName = message.lastName;
     }
+    if (message.privilege !== "") {
+      obj.privilege = message.privilege;
+    }
     return obj;
   },
 
@@ -1210,6 +1291,7 @@ export const User = {
     message.email = object.email ?? "";
     message.firstName = object.firstName ?? "";
     message.lastName = object.lastName ?? "";
+    message.privilege = object.privilege ?? "";
     return message;
   },
 };

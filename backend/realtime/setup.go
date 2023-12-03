@@ -9,7 +9,7 @@ import (
 func SetupRoutes(c *gin.Engine) {
 	room := c.Group("/api/realtime/room")
 	{
-		room.Use(middleware.UserMiddleware)
+		room.Use(middleware.AnyUserMiddleware())
 
 		room.GET("/:id", routes.GetRoom)
 	}

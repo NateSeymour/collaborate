@@ -4,18 +4,56 @@ import path from 'path';
 
 // Plugin loader
 function pluginLoader() {
+    let pluginEntry, manifest;
+
     return {
         name: 'rollup-plugin-swft-loader',
-        resolveId(source) {
+        async resolveId(source, importer, options) {
             if(source.endsWith('.swft')) {
+                // Resolve submodules
+                pluginEntry = await this.resolve(`${source}/plugin.ts`, importer, options);
+                if(pluginEntry && !pluginEntry.external) {
+
+                } else {
+                    return null;
+                }
+
+                manifest = await this.resolve(`${source}/manifest.json`, importer, options);
+                if(manifest && ! manifest.external) {
+                    const moduleInfo = await this.load(manifest);
+
+                    this.emitFile({
+                        type: 'asset',
+                        fileName: `@official/manifest.json`,
+                        code: moduleInfo.code,
+                    });
+                } else {
+                    return null;
+                }
+
                 return source;
             }
 
             return null;
         },
         load(id) {
-            return 'export default "This is virtual!"';
-        }
+            if(!id.endsWith('.swft')) return null;
+
+            /*
+            this.emitFile({
+                type: 'chunk',
+                id: `${id}/manifest.json`,
+            });*/
+
+            return `
+                import plugin from '${id}/plugin.ts';
+                import manifest from '${id}/manifest.json';
+                
+                export default {
+                    plugin, manifest
+                };
+            `;
+        },
     };
 }
 

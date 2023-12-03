@@ -8,8 +8,8 @@
                 <h1>Your Team Needs a Workspace</h1>
 
                 <div class="actions">
-                    <Button @click="router.push('/CreateRoom')">Custom Room</Button>
-                    <Button @click="startCollaborating.mutate()" visual-placement="foreground">Start Collaborating</Button>
+                    <Button to="/CreateRoom">Custom Room</Button>
+                    <Button :action="startCollaborating" visual-placement="foreground">Start Collaborating</Button>
                 </div>
             </div>
         </div>

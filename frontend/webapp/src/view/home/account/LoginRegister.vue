@@ -1,7 +1,8 @@
 <template>
     <div class="register">
         <div class="register-box">
-            <h1>Create Account</h1>
+            <h1 v-if="action === 'register'">Create Account</h1>
+            <h1 v-if="action === 'login'">Welcome Back</h1>
 
             <div class="sso">
                 <button class="sso-button">
@@ -18,7 +19,8 @@
                 <TextBox name="password" type="password" hint="password123" />
 
                 <div class="actions">
-                    <Button :action="register" visual-placement="foreground">Register</Button>
+                    <Button v-if="action === 'register'" :action="register" visual-placement="foreground">Register</Button>
+                    <Button v-if="action === 'login'" :action="login" visual-placement="foreground">Login</Button>
                 </div>
             </div>
         </div>
@@ -31,7 +33,11 @@ import TextBox from '@/components/form/TextBox.vue';
 import { useForm } from '@/util/form';
 import { useRouter } from 'vue-router';
 import {buildMutation} from "@/api/api";
-import {RegisterRequest} from "@/api/auth";
+import {LoginRequest, RegisterRequest} from "@/api/auth";
+
+const props = defineProps<{
+    action: 'login' | 'register',
+}>();
 
 const router = useRouter();
 
@@ -39,9 +45,17 @@ const [form, formHandler] = useForm();
 
 const register = buildMutation<RegisterRequest, void>('/auth/Register', {
     cacheKey: ['auth', 'user'],
-    body: form,
+    body: () => form.value as RegisterRequest,
     onSuccess: () => {
         router.push('/RegistrationStaging');
+    }
+});
+
+const login = buildMutation<LoginRequest, void>('/auth/Login', {
+    cacheKey: ['auth', 'user'],
+    body: () => form.value as LoginRequest,
+    onSuccess: () => {
+        router.push('/Welcome');
     }
 });
 </script>

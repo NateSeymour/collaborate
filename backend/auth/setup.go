@@ -15,8 +15,9 @@ func SetupRoutes(c *gin.Engine) {
 	}
 
 	private := c.Group("/api/auth")
-	private.Use(middleware.UserMiddleware)
+	private.Use(middleware.AnyUserMiddleware())
 	{
-		private.GET("/User", middleware.UserMiddleware, routes.GetUser)
+		private.GET("/User", routes.GetUser)
+		private.POST("/Logout", routes.Logout)
 	}
 }

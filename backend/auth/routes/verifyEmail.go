@@ -40,8 +40,8 @@ func VerifyEmail(c *gin.Context) {
 
 		// Get user information
 		user := pb.User{}
-		userRow := conn.QueryRow(c, "SELECT id, nickname, email, first_name, last_name FROM users WHERE email=$1", claims.EmailAddress)
-		userRow.Scan(&user.Id, &user.PreferredNickname, &user.Email, &user.FirstName, &user.LastName)
+		userRow := conn.QueryRow(c, "SELECT id, nickname, email, first_name, last_name, privilege FROM users WHERE email=$1", claims.EmailAddress)
+		userRow.Scan(&user.Id, &user.PreferredNickname, &user.Email, &user.FirstName, &user.LastName, &user.Privilege)
 
 		// Create user token
 		claims := signing.UserToken{

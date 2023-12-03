@@ -1,7 +1,11 @@
-import { ref } from 'vue';
+import {Ref, ref} from 'vue';
 
-export const useForm = () => {
-    const values = ref<{ [key: string]: any }>({});
+interface JsonMap {
+    [key: string]: any,
+}
+
+export function useForm(): [Ref<JsonMap>, (e: InputEvent) => void]  {
+    const values = ref<JsonMap>({});
 
     return [values, (e: InputEvent) => {
         if(!e.target) return;

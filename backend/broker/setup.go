@@ -8,9 +8,8 @@ import (
 
 func SetupRoutes(c *gin.Engine) {
 	broker := c.Group("/api/broker")
+	broker.Use(middleware.AnyUserMiddleware())
 	{
-		broker.Use(middleware.UserMiddleware)
-
 		broker.POST("/CreateRoom", routes.CreateRoom)
 	}
 }

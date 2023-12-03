@@ -67,6 +67,12 @@ enum UserSubscriptionType {
     USER_SUBSCRIPTION_PREMIUM = 2;
 }
 
+enum UserPrivilege {
+    USER_PRIVILEGE_UNSPECIFIED = 0;
+    PRIVILEGE_STANDARD = 1;
+    PRIVILEGE_SUPERUSER = 2;
+}
+
 message User {
     UserSubscriptionType subscriptionType = 1;
     uint64 id = 5;
@@ -75,6 +81,7 @@ message User {
     string email = 3;
     string firstName = 6;
     string lastName = 7;
+    string privilege = 8;
 }
 
 /* POINTER */

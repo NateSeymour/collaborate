@@ -18,7 +18,7 @@ $font-title: 'Work Sans', sans-serif;
 
 @mixin centered-content {
     display: grid;
-    place-items: center;
+    place-content: center;
 }
 
 @mixin hover-highlight {

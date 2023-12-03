@@ -6,6 +6,8 @@
 
         <div v-if="user.data.value" class="user">
             {{ user.data.value.email }}
+
+            <Button :action="logout">Logout</Button>
         </div>
         <div v-else class="actions">
             <Button @click="router.push('/Login')" visual-placement="background">Login</Button>
@@ -17,13 +19,17 @@
 <script setup lang="ts">
 import Button from '@/components/form/Button.vue';
 import { useRouter } from 'vue-router';
-import {buildQuery} from "@/api/api";
-import { User } from 'pb/User.ts';
+import {buildMutation, useApiQuery} from "@/api/api";
+import { User } from 'pb/Swifteams.ts';
 
 const router = useRouter();
 
-const user = buildQuery<User>('/auth/User', {
+const user = useApiQuery<User>('/auth/User', {
     queryKey: ['auth', 'user'],
+});
+
+const logout = buildMutation<void, void>('/auth/Logout', {
+    cacheKey: ['auth', 'user']
 });
 </script>
 

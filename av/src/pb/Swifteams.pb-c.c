@@ -891,7 +891,7 @@ const ProtobufCMessageDescriptor plugin_manifest__descriptor =
   (ProtobufCMessageInit) plugin_manifest__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor user__field_descriptors[6] =
+static const ProtobufCFieldDescriptor user__field_descriptors[7] =
 {
   {
     "subscriptionType",
@@ -965,6 +965,18 @@ static const ProtobufCFieldDescriptor user__field_descriptors[6] =
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
+  {
+    "privilege",
+    8,
+    PROTOBUF_C_LABEL_NONE,
+    PROTOBUF_C_TYPE_STRING,
+    0,   /* quantifier_offset */
+    offsetof(User, privilege),
+    NULL,
+    &protobuf_c_empty_string,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
 };
 static const unsigned user__field_indices_by_name[] = {
   2,   /* field[2] = email */
@@ -972,13 +984,14 @@ static const unsigned user__field_indices_by_name[] = {
   3,   /* field[3] = id */
   5,   /* field[5] = lastName */
   1,   /* field[1] = preferredNickname */
+  6,   /* field[6] = privilege */
   0,   /* field[0] = subscriptionType */
 };
 static const ProtobufCIntRange user__number_ranges[2 + 1] =
 {
   { 1, 0 },
   { 5, 3 },
-  { 0, 6 }
+  { 0, 7 }
 };
 const ProtobufCMessageDescriptor user__descriptor =
 {
@@ -988,7 +1001,7 @@ const ProtobufCMessageDescriptor user__descriptor =
   "User",
   "",
   sizeof(User),
-  6,
+  7,
   user__field_descriptors,
   user__field_indices_by_name,
   2,  user__number_ranges,
@@ -1443,6 +1456,32 @@ const ProtobufCMessageDescriptor room_configuration__descriptor =
   (ProtobufCMessageInit) room_configuration__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
+static const ProtobufCEnumValue value__enum_values_by_number[1] =
+{
+  { "UNSPECIFIED", "VALUE__UNSPECIFIED", 0 },
+};
+static const ProtobufCIntRange value__value_ranges[] = {
+{0, 0},{0, 1}
+};
+static const ProtobufCEnumValueIndex value__enum_values_by_name[1] =
+{
+  { "UNSPECIFIED", 0 },
+};
+const ProtobufCEnumDescriptor value__descriptor =
+{
+  PROTOBUF_C__ENUM_DESCRIPTOR_MAGIC,
+  "Value",
+  "Value",
+  "Value",
+  "",
+  1,
+  value__enum_values_by_number,
+  1,
+  value__enum_values_by_name,
+  1,
+  value__value_ranges,
+  NULL,NULL,NULL,NULL   /* reserved[1234] */
+};
 static const ProtobufCEnumValue pointer_type__enum_values_by_number[4] =
 {
   { "POINTER_TYPE_UNSPECIFIED", "POINTER_TYPE__POINTER_TYPE_UNSPECIFIED", 0 },
@@ -1605,6 +1644,36 @@ const ProtobufCEnumDescriptor user_subscription_type__descriptor =
   user_subscription_type__enum_values_by_name,
   1,
   user_subscription_type__value_ranges,
+  NULL,NULL,NULL,NULL   /* reserved[1234] */
+};
+static const ProtobufCEnumValue user_privilege__enum_values_by_number[3] =
+{
+  { "USER_PRIVILEGE_UNSPECIFIED", "USER_PRIVILEGE__USER_PRIVILEGE_UNSPECIFIED", 0 },
+  { "PRIVILEGE_STANDARD", "USER_PRIVILEGE__PRIVILEGE_STANDARD", 1 },
+  { "PRIVILEGE_SUPERUSER", "USER_PRIVILEGE__PRIVILEGE_SUPERUSER", 2 },
+};
+static const ProtobufCIntRange user_privilege__value_ranges[] = {
+{0, 0},{0, 3}
+};
+static const ProtobufCEnumValueIndex user_privilege__enum_values_by_name[3] =
+{
+  { "PRIVILEGE_STANDARD", 1 },
+  { "PRIVILEGE_SUPERUSER", 2 },
+  { "USER_PRIVILEGE_UNSPECIFIED", 0 },
+};
+const ProtobufCEnumDescriptor user_privilege__descriptor =
+{
+  PROTOBUF_C__ENUM_DESCRIPTOR_MAGIC,
+  "UserPrivilege",
+  "UserPrivilege",
+  "UserPrivilege",
+  "",
+  3,
+  user_privilege__enum_values_by_number,
+  3,
+  user_privilege__enum_values_by_name,
+  1,
+  user_privilege__value_ranges,
   NULL,NULL,NULL,NULL   /* reserved[1234] */
 };
 static const ProtobufCEnumValue client_role__enum_values_by_number[4] =

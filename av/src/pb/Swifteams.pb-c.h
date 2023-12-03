@@ -37,6 +37,10 @@ typedef struct RoomConfiguration RoomConfiguration;
 /*
  * COMMON TYPES 
  */
+typedef enum _Value {
+  VALUE__UNSPECIFIED = 0
+    PROTOBUF_C__FORCE_ENUM_TO_BE_INT_SIZE(VALUE)
+} Value;
 typedef enum _PointerType {
   POINTER_TYPE__POINTER_TYPE_UNSPECIFIED = 0,
   POINTER_TYPE__POINTER_TYPE_POINTER = 1,
@@ -80,6 +84,12 @@ typedef enum _UserSubscriptionType {
   USER_SUBSCRIPTION_TYPE__USER_SUBSCRIPTION_PREMIUM = 2
     PROTOBUF_C__FORCE_ENUM_TO_BE_INT_SIZE(USER_SUBSCRIPTION_TYPE)
 } UserSubscriptionType;
+typedef enum _UserPrivilege {
+  USER_PRIVILEGE__USER_PRIVILEGE_UNSPECIFIED = 0,
+  USER_PRIVILEGE__PRIVILEGE_STANDARD = 1,
+  USER_PRIVILEGE__PRIVILEGE_SUPERUSER = 2
+    PROTOBUF_C__FORCE_ENUM_TO_BE_INT_SIZE(USER_PRIVILEGE)
+} UserPrivilege;
 typedef enum _ClientRole {
   CLIENT_ROLE__CLIENT_ROLE_UNSPECIFIED = 0,
   CLIENT_ROLE__GUEST = 1,
@@ -209,10 +219,11 @@ struct  User
   char *email;
   char *firstname;
   char *lastname;
+  char *privilege;
 };
 #define USER__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&user__descriptor) \
-, USER_SUBSCRIPTION_TYPE__USER_SUBSCRIPTION_UNSPECIFIED, 0, (char *)protobuf_c_empty_string, (char *)protobuf_c_empty_string, (char *)protobuf_c_empty_string, (char *)protobuf_c_empty_string }
+, USER_SUBSCRIPTION_TYPE__USER_SUBSCRIPTION_UNSPECIFIED, 0, (char *)protobuf_c_empty_string, (char *)protobuf_c_empty_string, (char *)protobuf_c_empty_string, (char *)protobuf_c_empty_string, (char *)protobuf_c_empty_string }
 
 
 /*
@@ -608,11 +619,13 @@ typedef void (*RoomConfiguration_Closure)
 
 /* --- descriptors --- */
 
+extern const ProtobufCEnumDescriptor    value__descriptor;
 extern const ProtobufCEnumDescriptor    pointer_type__descriptor;
 extern const ProtobufCEnumDescriptor    store_member_type__descriptor;
 extern const ProtobufCEnumDescriptor    store_access_type__descriptor;
 extern const ProtobufCEnumDescriptor    store_persistence_type__descriptor;
 extern const ProtobufCEnumDescriptor    user_subscription_type__descriptor;
+extern const ProtobufCEnumDescriptor    user_privilege__descriptor;
 extern const ProtobufCEnumDescriptor    client_role__descriptor;
 extern const ProtobufCEnumDescriptor    client_message_type__descriptor;
 extern const ProtobufCEnumDescriptor    close_code__descriptor;

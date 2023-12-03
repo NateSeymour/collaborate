@@ -4,7 +4,7 @@ interface Message {
     content: string,
 }
 
-export const plugin = {
+export default {
     activities: [
         {
             name: 'chat',
